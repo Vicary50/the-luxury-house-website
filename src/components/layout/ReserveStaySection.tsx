@@ -454,7 +454,7 @@ export default function ReserveStaySection() {
                 {availabilityStatus === 'checking' || isSubmitting
                   ? 'Sending message...'
                   : availabilityStatus === 'available'
-                  ? 'Available - Inquiry Sent!'
+                  ? 'Success - Inquiry Sent!'
                   : availabilityStatus === 'unavailable'
                   ? 'Unavailable - But Inquiry Sent'
                   : 'Send Inquiry'
