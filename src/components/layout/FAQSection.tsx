@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 interface FAQ {
   id: number;
   question: string;
-  answer: string | JSX.Element;
+  answer: string | ReactNode;
 }
 
 export default function FAQSection() {
