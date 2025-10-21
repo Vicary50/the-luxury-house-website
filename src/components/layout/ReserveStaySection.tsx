@@ -169,25 +169,6 @@ export default function ReserveStaySection() {
     }
 
     try {
-      // First check availability
-      const availabilityResponse = await fetch(
-        `/api/availability?checkIn=${formData.checkInDate?.toISOString()}&checkOut=${formData.checkOutDate?.toISOString()}&accommodationType=${formData.accommodationType}`
-      );
-      
-      if (availabilityResponse.ok) {
-        const availabilityData = await availabilityResponse.json();
-        
-        if (availabilityData.available) {
-          setAvailabilityStatus('available');
-        } else {
-          setAvailabilityStatus('unavailable');
-        }
-      } else {
-        // If availability check fails, still allow form submission but show warning
-        console.warn('Could not check availability, proceeding with submission');
-        setAvailabilityStatus('available'); // Assume available if can't check
-      }
-
       // Submit inquiry via email
       const formDataToSubmit = {
         ...formData,
@@ -195,37 +176,25 @@ export default function ReserveStaySection() {
         checkOutDate: formData.checkOutDate?.toISOString() || ''
       };
 
-      try {
-        // Send email notification
-        const emailResponse = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formDataToSubmit),
-        });
+      // Send email notification
+      const emailResponse = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataToSubmit),
+      });
 
-        if (!emailResponse.ok) {
-          console.warn('Email sending failed, but continuing with success flow');
-        }
-
-        // Also save to Google Sheets if configured
-        try {
-          await fetch('/api/availability', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formDataToSubmit),
-          });
-        } catch (sheetError) {
-          console.warn('Google Sheets submission failed:', sheetError);
-        }
-      } catch (emailError) {
-        console.warn('Email submission failed:', emailError);
+      if (emailResponse.ok) {
+        setAvailabilityStatus('available');
+      } else {
+        console.error('Email sending failed');
+        alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
+        setIsSubmitting(false);
+        return;
       }
 
-      // Always show success message and reset form after showing availability
+      // Show success message and reset form
       setTimeout(() => {
         alert('Thank you for your inquiry! We will get back to you soon.');
         // Reset form after delay

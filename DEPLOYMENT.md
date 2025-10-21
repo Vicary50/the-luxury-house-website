@@ -96,18 +96,15 @@ NODE_VERSION = 18
 
 Still on the deployment configuration page, add these environment variables:
 
-#### Required for Email:
+#### Required:
 ```
 RESEND_API_KEY = re_your_api_key_from_resend
 NEXT_PUBLIC_CONTACT_EMAIL = theluxuryhouseuk@gmail.com
 NEXT_PUBLIC_SITE_URL = https://YOUR_SITE.netlify.app
 ```
 
-#### Optional (Google Sheets):
+#### Optional:
 ```
-GOOGLE_SHEETS_PRIVATE_KEY = your_private_key
-GOOGLE_SHEETS_CLIENT_EMAIL = your_service_account@project.iam.gserviceaccount.com
-GOOGLE_SPREADSHEET_ID = your_spreadsheet_id
 ```
 
 7. Click **Deploy site**
@@ -309,7 +306,6 @@ If you encounter issues:
 Upgrade options:
 - Netlify Pro ($19/month): Analytics, forms, better performance
 - Resend Pro ($20/month): 50,000 emails/month
-- Google Sheets: Free for logging inquiries
 
 ---
 
