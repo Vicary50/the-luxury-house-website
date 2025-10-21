@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,12 +36,12 @@ export default function Header() {
   };
 
   const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Activities & Experiences', href: '/activities' },
-    { name: 'Gallery', href: '/#gallery', onClick: handleGalleryClick },
-    { name: 'Guest Resources', href: '/info' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/#contact-form', onClick: handleContactClick },
+    { name: 'Home', href: '/', isPage: true },
+    { name: 'Activities & Experiences', href: '/activities', isPage: true },
+    { name: 'Gallery', href: '/#gallery', onClick: handleGalleryClick, isPage: false },
+    { name: 'Guest Resources', href: '/info', isPage: true },
+    { name: 'Blog', href: '/blog', isPage: true },
+    { name: 'Contact', href: '/#contact-form', onClick: handleContactClick, isPage: false },
   ];
 
   return (
@@ -57,13 +58,22 @@ export default function Header() {
             <ul className="flex space-x-8">
               {navItems.map((item) => (
                 <li key={item.name}>
-                  <a
-                    href={item.href}
-                    onClick={item.onClick}
-                    className="text-gray-700 hover:text-amber-700 font-medium transition-colors duration-200"
-                  >
-                    {item.name}
-                  </a>
+                  {item.isPage ? (
+                    <Link
+                      href={item.href}
+                      className="text-gray-700 hover:text-amber-700 font-medium transition-colors duration-200"
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={item.href}
+                      onClick={item.onClick}
+                      className="text-gray-700 hover:text-amber-700 font-medium transition-colors duration-200"
+                    >
+                      {item.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -96,19 +106,30 @@ export default function Header() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
               {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 text-gray-700 hover:text-amber-700 font-medium"
-                  onClick={(e) => {
-                    setIsMenuOpen(false);
-                    if (item.onClick) {
-                      item.onClick(e);
-                    }
-                  }}
-                >
-                  {item.name}
-                </a>
+                item.isPage ? (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 text-gray-700 hover:text-amber-700 font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 text-gray-700 hover:text-amber-700 font-medium"
+                    onClick={(e) => {
+                      setIsMenuOpen(false);
+                      if (item.onClick) {
+                        item.onClick(e);
+                      }
+                    }}
+                  >
+                    {item.name}
+                  </a>
+                )
               ))}
               <a
                 href="/#contact-form"

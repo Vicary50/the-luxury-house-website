@@ -34,65 +34,6 @@ export default function ReserveStaySection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availabilityStatus, setAvailabilityStatus] = useState<'checking' | 'available' | 'unavailable' | null>(null);
 
-  // Calculate pricing based on guest count and duration
-  const calculatePrice = () => {
-    if (!formData.checkInDate || !formData.checkOutDate) return null;
-
-    const nights = Math.ceil((formData.checkOutDate.getTime() - formData.checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-    if (nights <= 0) return null;
-
-    let pricePerNight: number;
-    let actualNights: number;
-
-    if (formData.accommodationType === 'entire-property') {
-      // The Luxury House - Main House, Pool Villa, Heated Swimming Pool
-      // Minimum: 10 adults & 2 nights = £2,400
-      // Maximum: 14 adults, 2 children, 2 infants
-
-      // Enforce minimum nights (2)
-      actualNights = Math.max(nights, 2);
-
-      // Calculate total guests (adults + children, infants not counted)
-      const totalGuests = formData.numberOfAdults + formData.numberOfChildren;
-
-      if (totalGuests <= 10) {
-        // If total guests ≤ 10, charge minimum (10 adults @ £120)
-        // Children are NOT charged separately
-        pricePerNight = 10 * 120; // £1,200 per night
-      } else {
-        // If total guests > 10:
-        // 1. Always charge for minimum 10 adults
-        const adultsForPricing = Math.max(formData.numberOfAdults, 10);
-
-        // 2. Calculate how many children are beyond the 10-guest base
-        // First 10 guests are covered by the base rate
-        const childrenBeyond10 = Math.max(0, totalGuests - 10);
-
-        // Adults: minimum 10 @ £120 per person per night
-        // Children beyond 10th guest: £50 per person per night
-        pricePerNight = (adultsForPricing * 120) + (childrenBeyond10 * 50);
-      }
-
-    } else {
-      // Pool Villa & Heated Swimming Pool
-      // Minimum: 2 adults & 2 nights
-      // Maximum: 3 Adults OR 2 Adults & 1 Child OR 2 Adults & 1 Child & 1 Infant
-
-      // Enforce minimum nights (2)
-      actualNights = Math.max(nights, 2);
-
-      // Enforce minimum adults (2) for pricing calculation
-      const adultsForPricing = Math.max(formData.numberOfAdults, 2);
-
-      // Adults: £115 per person per night (minimum 2)
-      // Children (2-12): FREE
-      // Infants (under 2): FREE
-      pricePerNight = adultsForPricing * 115;
-    }
-
-    return pricePerNight * actualNights;
-  };
-
   // Get price breakdown details for display
   const getPriceBreakdown = () => {
     if (!formData.checkInDate || !formData.checkOutDate) return null;

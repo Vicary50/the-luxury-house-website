@@ -2,6 +2,7 @@
 
 import { Mail, MapPin, Instagram, Facebook } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -55,7 +56,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#home" className="text-gray-300 hover:text-amber-400 transition-colors">Home</a></li>
+              <li><Link href="/" className="text-gray-300 hover:text-amber-400 transition-colors">Home</Link></li>
               <li><a href="#about" className="text-gray-300 hover:text-amber-400 transition-colors">Info</a></li>
               <li><a href="#gallery" className="text-gray-300 hover:text-amber-400 transition-colors">Gallery</a></li>
               <li><a href="/#contact-form" onClick={handleContactClick} className="text-gray-300 hover:text-amber-400 transition-colors">Contact</a></li>
