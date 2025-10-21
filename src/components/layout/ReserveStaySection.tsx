@@ -188,15 +188,16 @@ export default function ReserveStaySection() {
         setAvailabilityStatus('available'); // Assume available if can't check
       }
 
-      // Submit inquiry (with fallback if Google Sheets fails)
+      // Submit inquiry via email
       const formDataToSubmit = {
         ...formData,
-        checkInDate: formData.checkInDate?.toISOString().split('T')[0] || '',
-        checkOutDate: formData.checkOutDate?.toISOString().split('T')[0] || ''
+        checkInDate: formData.checkInDate?.toISOString() || '',
+        checkOutDate: formData.checkOutDate?.toISOString() || ''
       };
-      
+
       try {
-        const response = await fetch('/api/availability', {
+        // Send email notification
+        const emailResponse = await fetch('/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -204,12 +205,24 @@ export default function ReserveStaySection() {
           body: JSON.stringify(formDataToSubmit),
         });
 
-        // Don't fail the whole process if Google Sheets is down
-        if (!response.ok) {
-          console.warn('Google Sheets submission failed, but continuing with success flow');
+        if (!emailResponse.ok) {
+          console.warn('Email sending failed, but continuing with success flow');
         }
-      } catch (sheetError) {
-        console.warn('Google Sheets submission failed:', sheetError);
+
+        // Also save to Google Sheets if configured
+        try {
+          await fetch('/api/availability', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formDataToSubmit),
+          });
+        } catch (sheetError) {
+          console.warn('Google Sheets submission failed:', sheetError);
+        }
+      } catch (emailError) {
+        console.warn('Email submission failed:', emailError);
       }
 
       // Always show success message and reset form after showing availability
