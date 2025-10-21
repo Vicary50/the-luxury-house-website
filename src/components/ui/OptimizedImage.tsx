@@ -7,8 +7,8 @@ import { getPlaceholderImage } from '@/lib/images';
 interface OptimizedImageProps {
   src: string;
   alt: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   className?: string;
   priority?: boolean;
   fill?: boolean;
@@ -30,7 +30,9 @@ export default function OptimizedImage({
 
   const handleError = () => {
     // Fallback to placeholder image if the original fails to load
-    setImageSrc(getPlaceholderImage(width, height, alt));
+    if (width && height) {
+      setImageSrc(getPlaceholderImage(width, height, alt));
+    }
   };
 
   const handleLoad = () => {
@@ -47,14 +49,14 @@ export default function OptimizedImage({
     } ${className}`,
     priority,
     sizes: sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-    ...(fill ? { fill: true } : { width, height }),
+    ...(fill ? { fill: true } : width && height ? { width, height } : {}),
   };
 
   return (
     <div className={`relative ${fill ? 'w-full h-full' : ''}`}>
       <Image {...imageProps} alt={alt} />
-      {isLoading && (
-        <div 
+      {isLoading && !fill && width && height && (
+        <div
           className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-100 animate-pulse"
           style={{ width, height }}
         />
