@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     // Send email to property owner
     const { data, error } = await resend.emails.send({
-      from: 'The Luxury House <noreply@theluxuryhouse.com>', // You'll need to verify your domain with Resend
+      from: 'The Luxury House <noreply@theluxuryhouse.uk>', // You'll need to verify your domain with Resend
       to: [process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com'],
       replyTo: email,
       subject: `New Inquiry from ${name} - ${accommodationName}`,
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation email to customer
     await resend.emails.send({
-      from: 'The Luxury House <noreply@theluxuryhouse.com>',
+      from: 'The Luxury House <noreply@theluxuryhouse.uk>',
       to: [email],
       subject: 'Thank you for your inquiry - The Luxury House',
       html: `

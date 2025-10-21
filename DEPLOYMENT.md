@@ -55,7 +55,7 @@ To send emails from your own domain:
 
 1. Go to **Domains** in Resend dashboard
 2. Click **Add Domain**
-3. Enter your domain (e.g., `theluxuryhouse.com`)
+3. Enter your domain (e.g., `www.theluxuryhouse.uk`)
 4. Follow the instructions to add DNS records
 5. Wait for verification (usually takes a few minutes)
 
@@ -63,7 +63,7 @@ To send emails from your own domain:
 
 After verification, update the email sender in:
 - `src/app/api/contact/route.ts` (line 37 and 67)
-- Change `noreply@theluxuryhouse.com` to your actual domain
+- Change `noreply@www.theluxuryhouse.uk` to your actual domain
 
 ---
 
@@ -123,14 +123,14 @@ NEXT_PUBLIC_SITE_URL = https://YOUR_SITE.netlify.app
 
 1. Go to **Site settings** → **Domain management**
 2. Click **Add custom domain**
-3. Enter your domain (e.g., `theluxuryhouse.com`)
+3. Enter your domain (e.g., `www.theluxuryhouse.uk`)
 4. Netlify will provide DNS instructions
 
 ### 4.2 Update DNS Records:
 
 Add these records at your domain registrar:
 
-**For root domain (theluxuryhouse.com):**
+**For root domain (www.theluxuryhouse.uk):**
 ```
 Type: A
 Name: @
@@ -154,7 +154,7 @@ Value: YOUR_SITE.netlify.app
 
 In Netlify **Site settings** → **Environment variables**, update:
 ```
-NEXT_PUBLIC_SITE_URL = https://theluxuryhouse.com
+NEXT_PUBLIC_SITE_URL = https://www.theluxuryhouse.uk
 ```
 
 Then redeploy:
@@ -323,4 +323,4 @@ Upgrade options:
 **Website deployed! 🎉**
 
 Your live URL: https://YOUR_SITE.netlify.app
-(or https://theluxuryhouse.com after domain setup)
+(or https://www.theluxuryhouse.uk after domain setup)

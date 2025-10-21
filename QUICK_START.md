@@ -98,7 +98,7 @@ After Netlify deployment:
 3. **Wait** for DNS propagation (5-30 minutes)
 4. **Update** environment variable in Netlify:
    ```
-   NEXT_PUBLIC_SITE_URL = https://theluxuryhouse.com
+   NEXT_PUBLIC_SITE_URL = https://www.theluxuryhouse.uk
    ```
 5. **Redeploy** the site
 
