@@ -82,19 +82,9 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: {
-          email: 'noreply@theluxuryhouse.uk',
-          name: 'The Luxury House'
-        },
-        to: [
-          {
-            email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com'
-          }
-        ],
-        replyTo: {
-          email: email,
-          name: name
-        },
+        from: 'The Luxury House <noreply@theluxuryhouse.uk>',
+        to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com',
+        reply_to: `${name} <${email}>`,
         subject: `New Inquiry from ${name} - ${accommodationName}`,
         html: emailHtml
       }),
@@ -117,15 +107,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: {
-          email: 'noreply@theluxuryhouse.uk',
-          name: 'The Luxury House'
-        },
-        to: [
-          {
-            email: email
-          }
-        ],
+        from: 'The Luxury House <noreply@theluxuryhouse.uk>',
+        to: email,
         subject: 'Thank you for your inquiry - The Luxury House',
         html: confirmationHtml
       }),
