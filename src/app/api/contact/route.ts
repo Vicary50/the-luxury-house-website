@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     `;
 
     // Send email to property owner using Maildiver
-    const ownerEmailResponse = await fetch('https://api.maildiver.com/v1/send', {
+    const ownerEmailResponse = await fetch('https://api.maildiver.com/v1/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
             email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com'
           }
         ],
-        reply_to: {
+        replyTo: {
           email: email,
           name: name
         },
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email to customer
-    await fetch('https://api.maildiver.com/v1/send', {
+    await fetch('https://api.maildiver.com/v1/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
