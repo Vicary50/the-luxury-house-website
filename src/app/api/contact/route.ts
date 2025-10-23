@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,37 +33,76 @@ export async function POST(request: NextRequest) {
       ? 'The Luxury House - Main House, Pool Villa, Heated Swimming Pool'
       : 'Pool Villa & Heated Swimming Pool';
 
-    // Send email to property owner
-    const { data, error } = await resend.emails.send({
-      from: 'The Luxury House <noreply@theluxuryhouse.uk>', // You'll need to verify your domain with Resend
-      to: [process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com'],
-      replyTo: email,
-      subject: `New Inquiry from ${name} - ${accommodationName}`,
-      html: `
-        <h2>New Contact Form Inquiry</h2>
-        <p><strong>From:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Telephone:</strong> ${telephone}</p>
-        
-        <h3>Booking Details</h3>
-        <p><strong>Accommodation:</strong> ${accommodationName}</p>
-        <p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Number of nights:</strong> ${nights}</p>
-        
-        <h3>Guests</h3>
-        <p><strong>Adults:</strong> ${numberOfAdults}</p>
-        <p><strong>Children (2-12 years):</strong> ${numberOfChildren}</p>
-        <p><strong>Infants (under 2):</strong> ${numberOfInfants}</p>
-        <p><strong>Total guests:</strong> ${numberOfAdults + numberOfChildren + numberOfInfants}</p>
-        
-        <hr>
-        <p style="color: #666; font-size: 12px;">This inquiry was submitted through the contact form at ${process.env.NEXT_PUBLIC_SITE_URL}</p>
-      `,
+    // Prepare email content
+    const emailHtml = `
+      <h2>New Contact Form Inquiry</h2>
+      <p><strong>From:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Telephone:</strong> ${telephone}</p>
+
+      <h3>Booking Details</h3>
+      <p><strong>Accommodation:</strong> ${accommodationName}</p>
+      <p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p><strong>Number of nights:</strong> ${nights}</p>
+
+      <h3>Guests</h3>
+      <p><strong>Adults:</strong> ${numberOfAdults}</p>
+      <p><strong>Children (2-12 years):</strong> ${numberOfChildren}</p>
+      <p><strong>Infants (under 2):</strong> ${numberOfInfants}</p>
+      <p><strong>Total guests:</strong> ${numberOfAdults + numberOfChildren + numberOfInfants}</p>
+
+      <hr>
+      <p style="color: #666; font-size: 12px;">This inquiry was submitted through the contact form at ${process.env.NEXT_PUBLIC_SITE_URL}</p>
+    `;
+
+    const confirmationHtml = `
+      <h2>Thank you for your inquiry!</h2>
+      <p>Dear ${name},</p>
+      <p>We have received your inquiry for ${accommodationName} and will get back to you as soon as possible.</p>
+
+      <h3>Your Inquiry Details:</h3>
+      <p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p><strong>Guests:</strong> ${numberOfAdults} adults, ${numberOfChildren} children, ${numberOfInfants} infants</p>
+
+      <p>We typically respond within 24 hours. If you have any urgent questions, please feel free to contact us directly at ${process.env.NEXT_PUBLIC_CONTACT_EMAIL}.</p>
+
+      <p>Best regards,<br>The Luxury House Team</p>
+
+      <hr>
+      <p style="color: #666; font-size: 12px;">The Luxury House | Beautiful East Yorkshire, United Kingdom</p>
+    `;
+
+    // Send email to property owner using Maildiver
+    const ownerEmailResponse = await fetch('https://api.maildiver.com/v1/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: {
+          email: 'noreply@theluxuryhouse.uk',
+          name: 'The Luxury House'
+        },
+        to: [
+          {
+            email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com'
+          }
+        ],
+        reply_to: {
+          email: email,
+          name: name
+        },
+        subject: `New Inquiry from ${name} - ${accommodationName}`,
+        html: emailHtml
+      }),
     });
 
-    if (error) {
-      console.error('Resend error:', error);
+    if (!ownerEmailResponse.ok) {
+      const errorData = await ownerEmailResponse.json();
+      console.error('Maildiver error:', errorData);
       return NextResponse.json(
         { error: 'Failed to send email' },
         { status: 500 }
@@ -74,32 +110,29 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email to customer
-    await resend.emails.send({
-      from: 'The Luxury House <noreply@theluxuryhouse.uk>',
-      to: [email],
-      subject: 'Thank you for your inquiry - The Luxury House',
-      html: `
-        <h2>Thank you for your inquiry!</h2>
-        <p>Dear ${name},</p>
-        <p>We have received your inquiry for ${accommodationName} and will get back to you as soon as possible.</p>
-        
-        <h3>Your Inquiry Details:</h3>
-        <p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Guests:</strong> ${numberOfAdults} adults, ${numberOfChildren} children, ${numberOfInfants} infants</p>
-        
-        <p>We typically respond within 24 hours. If you have any urgent questions, please feel free to contact us directly at ${process.env.NEXT_PUBLIC_CONTACT_EMAIL}.</p>
-        
-        <p>Best regards,<br>The Luxury House Team</p>
-        
-        <hr>
-        <p style="color: #666; font-size: 12px;">The Luxury House | Beautiful East Yorkshire, United Kingdom</p>
-      `,
+    await fetch('https://api.maildiver.com/v1/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: {
+          email: 'noreply@theluxuryhouse.uk',
+          name: 'The Luxury House'
+        },
+        to: [
+          {
+            email: email
+          }
+        ],
+        subject: 'Thank you for your inquiry - The Luxury House',
+        html: confirmationHtml
+      }),
     });
 
-    return NextResponse.json({ 
-      message: 'Inquiry sent successfully',
-      emailId: data?.id 
+    return NextResponse.json({
+      message: 'Inquiry sent successfully'
     });
 
   } catch (error) {

@@ -96,7 +96,7 @@ export default function ReserveStaySection() {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setAvailabilityStatus('checking');
@@ -110,57 +110,34 @@ export default function ReserveStaySection() {
     }
 
     try {
-      // Calculate nights
-      const nights = Math.ceil((formData.checkOutDate.getTime() - formData.checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+      // Submit inquiry via API
+      const formDataToSubmit = {
+        ...formData,
+        checkInDate: formData.checkInDate?.toISOString() || '',
+        checkOutDate: formData.checkOutDate?.toISOString() || ''
+      };
 
-      // Format accommodation type for display
-      const accommodationName = formData.accommodationType === 'entire-property'
-        ? 'The Luxury House - Main House, Pool Villa, Heated Swimming Pool'
-        : 'Pool Villa & Heated Swimming Pool';
+      // Send email notification via Maildiver API
+      const emailResponse = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataToSubmit),
+      });
 
-      // Format dates
-      const checkInFormatted = formData.checkInDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      const checkOutFormatted = formData.checkOutDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-      // Create email subject
-      const subject = `New Inquiry from ${formData.name} - ${accommodationName}`;
-
-      // Create email body
-      const body = `
-New Contact Form Inquiry
-
-From: ${formData.name}
-Email: ${formData.email}
-Telephone: ${formData.telephone}
-
-Booking Details:
-Accommodation: ${accommodationName}
-Check-in: ${checkInFormatted}
-Check-out: ${checkOutFormatted}
-Number of nights: ${nights}
-
-Guests:
-Adults: ${formData.numberOfAdults}
-Children (2-12 years): ${formData.numberOfChildren}
-Infants (under 2): ${formData.numberOfInfants}
-Total guests: ${formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants}
-
----
-This inquiry was submitted through the contact form at www.theluxuryhouse.uk
-      `.trim();
-
-      // Create mailto link
-      const mailtoLink = `mailto:theluxuryhouseuk@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-      // Open email client
-      window.location.href = mailtoLink;
-
-      // Show success status
-      setAvailabilityStatus('available');
+      if (emailResponse.ok) {
+        setAvailabilityStatus('available');
+      } else {
+        console.error('Email sending failed');
+        alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
+        setIsSubmitting(false);
+        return;
+      }
 
       // Show success message and reset form
       setTimeout(() => {
-        alert('Your email client should have opened with the inquiry details. Please send the email to complete your inquiry.');
+        alert('Thank you for your inquiry! We will get back to you soon.');
         // Reset form after delay
         setFormData({
           name: '',
@@ -174,11 +151,11 @@ This inquiry was submitted through the contact form at www.theluxuryhouse.uk
           numberOfInfants: 0
         });
         setAvailabilityStatus(null);
-      }, 2000); // Show availability status for 2 seconds
+      }, 3000); // Show availability status for 3 seconds
 
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was an error opening your email client. Please contact us directly at theluxuryhouseuk@gmail.com');
+      alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
       setAvailabilityStatus(null);
     } finally {
       setIsSubmitting(false);
