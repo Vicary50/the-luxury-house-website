@@ -119,32 +119,36 @@ export default function ReserveStaySection() {
       const priceBreakdown = getPriceBreakdown();
 
       // Prepare form data for Web3Forms
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
       const web3FormsData = new FormData();
-      web3FormsData.append('access_key', process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '');
+      web3FormsData.append('access_key', accessKey || 'fbfa8107-b8e1-4536-b398-3418f9e4d5ea');
       web3FormsData.append('subject', `New Inquiry from ${formData.name} - ${accommodationName}`);
       web3FormsData.append('from_name', 'The Luxury House Contact Form');
-      web3FormsData.append('replyto', formData.email);
 
-      // Add all form fields
-      web3FormsData.append('name', formData.name);
+      // Web3Forms requires 'email' field - this will be the reply-to address
       web3FormsData.append('email', formData.email);
-      web3FormsData.append('telephone', formData.telephone);
-      web3FormsData.append('accommodation', accommodationName);
-      web3FormsData.append('check_in_date', formData.checkInDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      web3FormsData.append('check_out_date', formData.checkOutDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      web3FormsData.append('number_of_nights', nights.toString());
-      web3FormsData.append('adults', formData.numberOfAdults.toString());
-      web3FormsData.append('children', formData.numberOfChildren.toString());
-      web3FormsData.append('infants', formData.numberOfInfants.toString());
-      web3FormsData.append('total_guests', (formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants).toString());
+
+      // Add all custom form fields with descriptive names
+      web3FormsData.append('Customer Name', formData.name);
+      web3FormsData.append('Customer Email', formData.email);
+      web3FormsData.append('Telephone', formData.telephone);
+      web3FormsData.append('Accommodation Type', accommodationName);
+      web3FormsData.append('Check-in Date', formData.checkInDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+      web3FormsData.append('Check-out Date', formData.checkOutDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+      web3FormsData.append('Number of Nights', nights.toString());
+      web3FormsData.append('Number of Adults', formData.numberOfAdults.toString());
+      web3FormsData.append('Number of Children (2-12 years)', formData.numberOfChildren.toString());
+      web3FormsData.append('Number of Infants (under 2)', formData.numberOfInfants.toString());
+      web3FormsData.append('Total Guests', (formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants).toString());
 
       // Add price breakdown if available
       if (priceBreakdown) {
-        web3FormsData.append('estimated_total_cost', `£${priceBreakdown.totalCost.toLocaleString()}`);
-        web3FormsData.append('cost_per_night', `£${Math.round(priceBreakdown.perNightCost).toLocaleString()}`);
+        web3FormsData.append('Estimated Total Cost', `£${priceBreakdown.totalCost.toLocaleString()}`);
+        web3FormsData.append('Cost Per Night', `£${Math.round(priceBreakdown.perNightCost).toLocaleString()}`);
       }
 
-      // Bot protection
+      // Bot protection honeypot (hidden field)
       web3FormsData.append('botcheck', '');
 
       // Submit to Web3Forms
@@ -176,7 +180,6 @@ export default function ReserveStaySection() {
           setAvailabilityStatus(null);
         }, 3000); // Show availability status for 3 seconds
       } else {
-        console.error('Web3Forms error:', result);
         alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
         setAvailabilityStatus(null);
       }
