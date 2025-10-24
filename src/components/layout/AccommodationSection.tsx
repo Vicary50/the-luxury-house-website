@@ -51,6 +51,25 @@ const accommodationOptions = [
 ];
 
 export default function AccommodationSection() {
+  const handleCardClick = (accommodationType: string) => {
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Optional: Pre-select the accommodation type in the form
+      setTimeout(() => {
+        const selectElement = document.querySelector('select[name="accommodationType"]') as HTMLSelectElement;
+        if (selectElement) {
+          const value = accommodationType === 'entire-property' ? 'entire-property' : 'poolhouse';
+          selectElement.value = value;
+          // Trigger change event to update React state
+          const event = new Event('change', { bubbles: true });
+          selectElement.dispatchEvent(event);
+        }
+      }, 500);
+    }
+  };
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,7 +98,8 @@ export default function AccommodationSection() {
           {accommodationOptions.map((option, index) => (
             <motion.div
               key={option.type}
-              className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-300 hover:shadow-md transition-all duration-300"
+              onClick={() => handleCardClick(option.type)}
+              className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-300 hover:shadow-md transition-all duration-300 cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}

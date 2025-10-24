@@ -110,48 +110,76 @@ export default function ReserveStaySection() {
     }
 
     try {
-      // Submit inquiry via API
-      const formDataToSubmit = {
-        ...formData,
-        checkInDate: formData.checkInDate?.toISOString() || '',
-        checkOutDate: formData.checkOutDate?.toISOString() || ''
-      };
+      // Calculate nights for display
+      const nights = Math.ceil((formData.checkOutDate.getTime() - formData.checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+      const accommodationName = formData.accommodationType === 'entire-property'
+        ? 'The Luxury House - Main House, Pool Villa, Heated Swimming Pool'
+        : 'Pool Villa & Heated Swimming Pool';
 
-      // Send email notification via Maildiver API
-      const emailResponse = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formDataToSubmit),
-      });
+      const priceBreakdown = getPriceBreakdown();
 
-      if (emailResponse.ok) {
-        setAvailabilityStatus('available');
-      } else {
-        console.error('Email sending failed');
-        alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
-        setIsSubmitting(false);
-        return;
+      // Prepare form data for Web3Forms
+      const web3FormsData = new FormData();
+      web3FormsData.append('access_key', process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '');
+      web3FormsData.append('subject', `New Inquiry from ${formData.name} - ${accommodationName}`);
+      web3FormsData.append('from_name', 'The Luxury House Contact Form');
+      web3FormsData.append('replyto', formData.email);
+
+      // Add all form fields
+      web3FormsData.append('name', formData.name);
+      web3FormsData.append('email', formData.email);
+      web3FormsData.append('telephone', formData.telephone);
+      web3FormsData.append('accommodation', accommodationName);
+      web3FormsData.append('check_in_date', formData.checkInDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+      web3FormsData.append('check_out_date', formData.checkOutDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+      web3FormsData.append('number_of_nights', nights.toString());
+      web3FormsData.append('adults', formData.numberOfAdults.toString());
+      web3FormsData.append('children', formData.numberOfChildren.toString());
+      web3FormsData.append('infants', formData.numberOfInfants.toString());
+      web3FormsData.append('total_guests', (formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants).toString());
+
+      // Add price breakdown if available
+      if (priceBreakdown) {
+        web3FormsData.append('estimated_total_cost', `£${priceBreakdown.totalCost.toLocaleString()}`);
+        web3FormsData.append('cost_per_night', `£${Math.round(priceBreakdown.perNightCost).toLocaleString()}`);
       }
 
-      // Show success message and reset form
-      setTimeout(() => {
-        alert('Thank you for your inquiry! We will get back to you soon.');
-        // Reset form after delay
-        setFormData({
-          name: '',
-          email: '',
-          telephone: '',
-          accommodationType: 'entire-property',
-          checkInDate: null,
-          checkOutDate: null,
-          numberOfAdults: 2,
-          numberOfChildren: 0,
-          numberOfInfants: 0
-        });
+      // Bot protection
+      web3FormsData.append('botcheck', '');
+
+      // Submit to Web3Forms
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: web3FormsData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setAvailabilityStatus('available');
+
+        // Show success message and reset form
+        setTimeout(() => {
+          alert('Thank you for your inquiry! We will get back to you soon.');
+          // Reset form after delay
+          setFormData({
+            name: '',
+            email: '',
+            telephone: '',
+            accommodationType: 'entire-property',
+            checkInDate: null,
+            checkOutDate: null,
+            numberOfAdults: 2,
+            numberOfChildren: 0,
+            numberOfInfants: 0
+          });
+          setAvailabilityStatus(null);
+        }, 3000); // Show availability status for 3 seconds
+      } else {
+        console.error('Web3Forms error:', result);
+        alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
         setAvailabilityStatus(null);
-      }, 3000); // Show availability status for 3 seconds
+      }
 
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -243,6 +271,7 @@ export default function ReserveStaySection() {
                 Accommodation Type <span className="text-red-500">*</span>
               </label>
               <select
+                name="accommodationType"
                 value={formData.accommodationType}
                 onChange={(e) => handleInputChange('accommodationType', e.target.value as 'entire-property' | 'poolhouse')}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"

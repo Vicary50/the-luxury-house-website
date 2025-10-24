@@ -19,8 +19,8 @@ export default function Home() {
         <LuxurySection />
         <FeaturesSection />
         <AccommodationSection />
-        <ReserveStaySection />
         <MasonryGallery />
+        <ReserveStaySection />
         <FAQSection />
       </main>
       <Footer />
