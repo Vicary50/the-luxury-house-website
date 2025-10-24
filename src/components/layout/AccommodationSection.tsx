@@ -54,9 +54,16 @@ export default function AccommodationSection() {
   const handleCardClick = (accommodationType: string) => {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-      contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Get the element's position and scroll with offset
+      const elementPosition = contactForm.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - 80; // 80px offset for header/spacing
 
-      // Optional: Pre-select the accommodation type in the form
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      // Pre-select the accommodation type in the form
       setTimeout(() => {
         const selectElement = document.querySelector('select[name="accommodationType"]') as HTMLSelectElement;
         if (selectElement) {
