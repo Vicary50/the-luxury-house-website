@@ -75,26 +75,33 @@ export async function POST(request: NextRequest) {
     `;
 
     // Send email to property owner using Maildiver
+    const emailPayload = {
+      from: 'The Luxury House <noreply@theluxuryhouse.uk>',
+      to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com',
+      reply_to: `${name} <${email}>`,
+      subject: `New Inquiry from ${name} - ${accommodationName}`,
+      html: emailHtml
+    };
+
+    console.log('Sending email with payload:', JSON.stringify(emailPayload, null, 2));
+
     const ownerEmailResponse = await fetch('https://api.maildiver.com/v1/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: 'The Luxury House <noreply@theluxuryhouse.uk>',
-        to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com',
-        reply_to: `${name} <${email}>`,
-        subject: `New Inquiry from ${name} - ${accommodationName}`,
-        html: emailHtml
-      }),
+      body: JSON.stringify(emailPayload),
     });
+
+    console.log('Maildiver response status:', ownerEmailResponse.status);
 
     if (!ownerEmailResponse.ok) {
       const errorData = await ownerEmailResponse.json();
-      console.error('Maildiver error:', errorData);
+      console.error('Maildiver error response:', JSON.stringify(errorData, null, 2));
+      console.error('Response status:', ownerEmailResponse.status);
       return NextResponse.json(
-        { error: 'Failed to send email' },
+        { error: 'Failed to send email', details: errorData },
         { status: 500 }
       );
     }

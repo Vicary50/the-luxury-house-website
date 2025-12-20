@@ -1,22 +1,10 @@
 User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Allow everything else (default behavior)
 Allow: /
 
 # Sitemap
 Sitemap: https://theluxuryhouse.uk/sitemap.xml
-
-# Crawl-delay
-Crawl-delay: 1
-
-# Disallow admin and private areas
-Disallow: /admin/
-Disallow: /api/
-Disallow: /_next/
-Disallow: /private/
-
-# Allow important directories
-Allow: /images/
-Allow: /favicon.ico
-
-# Block common bot directories
-Disallow: /*?*
-Disallow: /*#*
