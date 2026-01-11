@@ -132,9 +132,6 @@ export default function TermsContent() {
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     TERMS AND CONDITIONS
                   </h1>
-                  <h2 className="text-xl text-amber-600 font-semibold mb-4">
-                    THE HAVEN HOLIDAY LETS
-                  </h2>
                 </div>
                 <div className="flex-1 flex justify-end">
                   <button
@@ -148,10 +145,7 @@ export default function TermsContent() {
                 </div>
               </div>
               <p className="text-gray-600">
-                <strong>Property Owner:</strong> Mrs Suzanne Karri
-              </p>
-              <p className="text-gray-600">
-                <strong>Effective Date:</strong> August 2025
+                <strong>Effective Date:</strong> January 2026
               </p>
             </header>
 
@@ -681,8 +675,7 @@ export default function TermsContent() {
               </section>
 
               <footer className="text-center text-gray-500 text-sm mt-8 pt-8 border-t">
-                <p>Property Owner: Mrs Suzanne Karri</p>
-                <p>This document was last updated on August 2025.</p>
+                <p>This document was last updated on January 2026.</p>
                 <p>We recommend guests keep a copy for their records.</p>
                 <div className="mt-4">
                   <p>For questions about these terms, please contact us through our booking system.</p>
