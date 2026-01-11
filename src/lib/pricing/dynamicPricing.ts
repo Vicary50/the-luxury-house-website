@@ -27,9 +27,9 @@ let google: GoogleSheetsAPI | null = null;
 
 async function getGoogleAPI(): Promise<GoogleSheetsAPI | null> {
   if (typeof window !== 'undefined') return null;
-  
+
   if (google) return google;
-  
+
   try {
     const googleapis = await import('googleapis');
     google = googleapis as unknown as GoogleSheetsAPI;
@@ -141,7 +141,7 @@ class DynamicPricingEngine {
     if (typeof window !== 'undefined') return;
 
     const googleAPI = await getGoogleAPI();
-    
+
     if (googleAPI && process.env.GOOGLE_SHEETS_EMAIL && process.env.GOOGLE_SHEETS_PRIVATE_KEY && process.env.GOOGLE_SHEETS_ID) {
       try {
         const auth = new googleAPI.auth.GoogleAuth({
@@ -261,7 +261,7 @@ class DynamicPricingEngine {
 
   private getCurrentSeason(date: Date, seasonalPricing: SeasonalPricing[]): SeasonalPricing | null {
     const month = date.getMonth() + 1; // getMonth() returns 0-11
-    
+
     for (const season of seasonalPricing) {
       if (season.startMonth <= season.endMonth) {
         // Normal season (e.g., June-September)
@@ -275,17 +275,17 @@ class DynamicPricingEngine {
         }
       }
     }
-    
+
     return null;
   }
 
   private isDateInRange(date: Date, startDate: string, endDate: string): boolean {
     if (!startDate || !endDate) return false;
-    
+
     const checkDate = new Date(date);
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     return checkDate >= start && checkDate <= end;
   }
 
@@ -330,7 +330,7 @@ class DynamicPricingEngine {
     const nights = this.calculateLengthOfStay(checkInDate, checkOutDate);
     const breakdown: DynamicPricingBreakdown['breakdown'] = [];
     const appliedRules: string[] = [];
-    
+
     let totalPrice = 0;
     let minimumStay = baseRate.minStayStandard;
 
@@ -338,18 +338,18 @@ class DynamicPricingEngine {
     for (let i = 0; i < nights; i++) {
       const currentDate = new Date(checkInDate);
       currentDate.setDate(currentDate.getDate() + i);
-      
+
       // Start with base rate
       const isWeekendNight = this.isWeekend(currentDate);
       let nightlyRate = isWeekendNight ? baseRate.weekendBase : baseRate.weeknightBase;
-      
+
       // Apply seasonal multiplier
       const season = this.getCurrentSeason(currentDate, seasonalPricing);
       if (season) {
         const seasonMultiplier = isWeekendNight ? season.weekendMultiplier : season.weekdayMultiplier;
         nightlyRate *= seasonMultiplier;
         minimumStay = Math.max(minimumStay, season.minStay);
-        
+
         if (i === 0) { // Only add to breakdown once
           breakdown.push({
             description: `${season.season} season ${isWeekendNight ? 'weekend' : 'weekday'} adjustment`,
@@ -363,21 +363,21 @@ class DynamicPricingEngine {
       // Check for special events on this date
       for (const event of specialEvents) {
         if (!event.active) continue;
-        
+
         let eventApplies = false;
-        
+
         if (event.startDate && event.endDate) {
           // Date-specific events
           eventApplies = this.isDateInRange(currentDate, event.startDate, event.endDate);
         } else {
-          // Event type-based (e.g., Hen/Stag party)
+          // Event type-based (e.g., Hen party)
           eventApplies = specialEventTypes.includes(event.eventType);
         }
-        
+
         if (eventApplies) {
           nightlyRate *= event.multiplier;
           minimumStay = Math.max(minimumStay, event.minNights);
-          
+
           if (i === 0) { // Only add to breakdown once
             breakdown.push({
               description: `${event.eventName} surcharge`,
@@ -392,10 +392,10 @@ class DynamicPricingEngine {
       // Check for local events
       for (const event of localEvents) {
         if (!event.active) continue;
-        
+
         if (this.isDateInRange(currentDate, event.startDate, event.endDate)) {
           nightlyRate *= event.multiplier;
-          
+
           if (i === 0) { // Only add to breakdown once
             breakdown.push({
               description: `${event.eventName} local event surcharge`,
@@ -409,7 +409,7 @@ class DynamicPricingEngine {
 
       // Day-of-week surcharges
       if (this.isFriday(currentDate)) {
-        const fridayRule = pricingRules.find(rule => 
+        const fridayRule = pricingRules.find(rule =>
           rule.ruleType === 'Day_Week' && rule.condition === 'Friday' && rule.active
         );
         if (fridayRule) {
@@ -426,7 +426,7 @@ class DynamicPricingEngine {
       }
 
       if (this.isSaturday(currentDate)) {
-        const saturdayRule = pricingRules.find(rule => 
+        const saturdayRule = pricingRules.find(rule =>
           rule.ruleType === 'Day_Week' && rule.condition === 'Saturday' && rule.active
         );
         if (saturdayRule) {
@@ -454,12 +454,12 @@ class DynamicPricingEngine {
     if (guestCount > maxIncludedGuests) {
       const guestRule = pricingRules.find(rule => {
         if (rule.ruleType !== 'Guest_Count' || !rule.active) return false;
-        
+
         if (accommodationType === 'entire-property') {
           if (guestCount >= 9 && guestCount <= 12 && rule.condition === '9-12_guests') return true;
           if (guestCount >= 13 && guestCount <= 15 && rule.condition === '13-15_guests') return true;
         }
-        
+
         return false;
       });
 
@@ -478,11 +478,11 @@ class DynamicPricingEngine {
     // Apply length of stay discounts
     const lengthStayRule = pricingRules.find(rule => {
       if (rule.ruleType !== 'Length_Stay' || !rule.active) return false;
-      
+
       if (nights >= 7 && nights <= 13 && rule.condition === '7-13_nights') return true;
       if (nights >= 14 && nights <= 27 && rule.condition === '14-27_nights') return true;
       if (nights >= 28 && rule.condition === '28+_nights') return true;
-      
+
       return false;
     });
 
@@ -502,11 +502,11 @@ class DynamicPricingEngine {
     const advanceDays = this.getAdvanceBookingDays(checkInDate);
     const lastMinuteRule = pricingRules.find(rule => {
       if (rule.ruleType !== 'Last_Minute' || !rule.active) return false;
-      
+
       if (advanceDays >= 1 && advanceDays <= 2 && rule.condition === '1-2_days') return true;
       if (advanceDays >= 3 && advanceDays <= 6 && rule.condition === '3-6_days') return true;
       if (advanceDays >= 7 && advanceDays <= 13 && rule.condition === '7-13_days') return true;
-      
+
       return false;
     });
 
@@ -528,7 +528,7 @@ class DynamicPricingEngine {
     // Special event flat fees
     for (const event of specialEvents) {
       if (!event.active || event.flatFee === 0) continue;
-      
+
       if (specialEventTypes.includes(event.eventType)) {
         totalFlatFees += event.flatFee;
         breakdown.push({
@@ -542,10 +542,10 @@ class DynamicPricingEngine {
 
     // Add-on fees
     for (const addOn of addOns) {
-      const addOnRule = pricingRules.find(rule => 
+      const addOnRule = pricingRules.find(rule =>
         rule.ruleType === 'Add_On' && rule.condition === addOn && rule.active
       );
-      
+
       if (addOnRule && addOnRule.flatFee > 0) {
         totalFlatFees += addOnRule.flatFee;
         breakdown.push({

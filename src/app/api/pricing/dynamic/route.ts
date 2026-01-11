@@ -119,12 +119,12 @@ export async function GET() {
         checkInDate: '2025-08-23',
         checkOutDate: '2025-08-26',
         guestCount: 8,
-        specialEventTypes: ['Hen/Stag Party', 'Birthday/Anniversary'],
+        specialEventTypes: ['Hen Party', 'Birthday/Anniversary'],
         addOns: ['Early_Checkin', 'Late_Checkout']
       }
     },
     availableEventTypes: [
-      'Hen/Stag Party',
+      'Hen Party',
       'Birthday/Anniversary',
       'Wedding Party',
       'Corporate Event'

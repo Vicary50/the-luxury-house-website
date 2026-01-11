@@ -108,7 +108,7 @@ export const blogPosts: BlogPost[] = [
       <ul>
         <li><strong>Bride's Input is Key:</strong> Ask the bride to create the definitive guest list, including contact details</li>
         <li><strong>Prioritize (Secretly!):</strong> You can subtly ask her to rank guests by attendance preference for date planning</li>
-        <li><strong>Consider 'Sten' Possibilities:</strong> Is the bride open to a combined stag and hen party?</li>
+
         <li><strong>Dividing the Party:</strong> For diverse guest lists (family, different generations), consider whether one event suits everyone</li>
       </ul>
 

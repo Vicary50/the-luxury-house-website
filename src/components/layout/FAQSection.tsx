@@ -37,8 +37,8 @@ export default function FAQSection() {
     },
     {
       id: 5,
-      question: "Are stag and hen parties allowed?",
-      answer: "We welcome stag and hen parties. However, unauthorised celebrations, gatherings, large parties, or events are prohibited and may result in immediate termination of the booking without a refund."
+      question: "Are hen parties allowed?",
+      answer: "We welcome hen parties. However, unauthorised celebrations, gatherings, large parties, or events are prohibited and may result in immediate termination of the booking without a refund."
     },
     {
       id: 6,
@@ -51,8 +51,8 @@ export default function FAQSection() {
       answer: (
         <span>
           Please see our{' '}
-          <a 
-            href="#amenities" 
+          <a
+            href="#amenities"
             className="text-amber-600 hover:text-amber-700 underline"
           >
             Activities & Experiences page
@@ -91,7 +91,7 @@ export default function FAQSection() {
     <section className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -121,13 +121,12 @@ export default function FAQSection() {
                 <span className="text-gray-700 font-medium pr-4">
                   {faq.question}
                 </span>
-                <ChevronRight 
-                  className={`w-5 h-5 text-gray-500 transition-transform duration-200 flex-shrink-0 ${
-                    openFAQ === faq.id ? 'rotate-90' : ''
-                  }`}
+                <ChevronRight
+                  className={`w-5 h-5 text-gray-500 transition-transform duration-200 flex-shrink-0 ${openFAQ === faq.id ? 'rotate-90' : ''
+                    }`}
                 />
               </button>
-              
+
               <AnimatePresence>
                 {openFAQ === faq.id && (
                   <motion.div
