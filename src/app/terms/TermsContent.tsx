@@ -1,11 +1,85 @@
 'use client';
 
-import { PrinterIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { PrinterIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/layout/Footer';
+import SignaturePad from '@/components/ui/SignaturePad';
 
 export default function TermsContent() {
+  const [name, setName] = useState('');
+  const [signature, setSignature] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const handlePrint = () => {
     window.print();
+  };
+
+  const dataURLtoBlob = (dataurl: string) => {
+    const arr = dataurl.split(',');
+    if (arr.length < 2) return null;
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    if (!mimeMatch) return null;
+    const mime = mimeMatch[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signature) {
+      alert('Please provide your signature.');
+      return;
+    }
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      // Using the access key found in other forms
+      formData.append('access_key', process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || 'fbfa8107-b8e1-4536-b398-3418f9e4d5ea');
+      formData.append('subject', `Signed Terms & Conditions - ${name}`);
+      formData.append('from_name', 'The Luxury House Agreement');
+      formData.append('Name', name);
+      formData.append('Date Signed', new Date().toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }));
+
+      const blob = dataURLtoBlob(signature);
+      if (blob) {
+        formData.append('Signature', blob, 'signature.png');
+      }
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setIsSuccess(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert(result.message || 'Error submitting form. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('Failed to send. Please check your connection.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -87,13 +161,13 @@ export default function TermsContent() {
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">1. PARTIES AND AGREEMENT</h2>
                 <p className="mb-4">
-                  These Terms and Conditions (&ldquo;Terms&rdquo;) form a legally binding contract between the owner of The Luxury House <strong>Mrs Suzanne Karri</strong> (referred to as &ldquo;we,&rdquo; &ldquo;us,&rdquo; &ldquo;our,&rdquo; or &ldquo;the Property Owner&rdquo;) and the person making the booking (&ldquo;you,&rdquo; &ldquo;your,&rdquo; or &ldquo;the Lead Guest&rdquo;).
+                  These Terms and Conditions (&ldquo;Terms&rdquo;) form a legally binding contract between the owner of The Luxury House (referred to as &ldquo;we,&rdquo; &ldquo;us,&rdquo; &ldquo;our,&rdquo; or &ldquo;the Property Owner&rdquo;) and the person making the booking (&ldquo;you,&rdquo; &ldquo;your,&rdquo; or &ldquo;the Lead Guest&rdquo;).
                 </p>
-                
+
                 <p className="mb-4">
                   By making this booking, you confirm that you are at least 21 years of age and have the authority to enter into this agreement on behalf of everyone in your party. You also confirm that you have read, understood, and agreed to these terms and conditions, and that you will ensure all members of your party comply with them. You understand your cancellation and refund rights, and you acknowledge that you have been provided with all the necessary pre-contract information.
                 </p>
-                
+
                 <p className="mb-4">
                   These Terms comply with the <strong>Consumer Rights Act 2015</strong>, <strong>Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013</strong>, and relevant UK consumer protection legislation.
                 </p>
@@ -101,7 +175,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">2. BOOKING PROCESS AND CONFIRMATION</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">2.1 Booking Confirmation</h3>
                 <p className="mb-4">A booking becomes legally binding when:</p>
                 <ul className="list-disc pl-6 mb-4">
@@ -117,7 +191,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">3. PAYMENT TERMS</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">3.1 Deposit Requirements</h3>
                 <ul className="list-disc pl-6 mb-4">
                   <li><strong>Booking Deposit:</strong> £1,000 (non-refundable)</li>
@@ -154,9 +228,9 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">4. CANCELLATION AND REFUND POLICY</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">4.1 Guest Cancellations</h3>
-                
+
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
                   <p className="font-semibold text-green-800 mb-2">More than 30 days before arrival:</p>
                   <p className="text-green-700">
@@ -184,7 +258,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">5. CHECK-IN AND CHECK-OUT</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">5.1 Arrival and Departure Times</h3>
                 <ul className="list-disc pl-6 mb-4">
                   <li><strong>Check-in:</strong> From 3:00 PM on arrival date</li>
@@ -213,7 +287,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">6. OCCUPANCY AND PROPERTY USE</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">6.1 Guest Numbers</h3>
                 <p className="mb-4">
                   The maximum occupancy for this property is 16 people (14 adults, 2 children). To ensure a smooth stay, all guests must be listed on the booking form with their full names and ages. If you want to add more guests, you must get prior written approval, and a surcharge may apply. Please note that unauthorized additional guests may result in the immediate termination of your booking and require you to vacate the property.
@@ -255,15 +329,15 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">7. PROPERTY FACILITIES AND SAFETY</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">7.1 Swimming Pool</h3>
-                
+
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                   <h4 className="text-lg font-bold text-blue-800 mb-4">Swimming Pool Rules & Safety Guidelines</h4>
                   <p className="text-blue-700 mb-4">
                     By using the swimming pool, you acknowledge and agree to the following rules, which are in place for your safety and to maintain the quality of the pool area.
                   </p>
-                  
+
                   <p className="text-blue-700 mb-4">
                     <strong>Your safety is your responsibility.</strong> Use of the pool is at your own risk. There is no lifeguard on duty, and the host is not liable for any injuries, accidents, or fatalities. Children and non-swimmers must be supervised by a responsible adult at all times.
                   </p>
@@ -325,7 +399,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">8. GUEST RESPONSIBILITIES</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">8.1 Property Care</h3>
                 <p className="mb-2">You must:</p>
                 <ul className="list-disc pl-6 mb-4">
@@ -373,7 +447,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">9. DAMAGES AND LIABILITY</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">9.1 Property Damage</h3>
                 <p className="mb-4">
                   Please report any damage immediately, regardless of how it happened. While minor accidental damage is covered by your security deposit, significant damage or negligence may result in additional charges. We also reserve the right to seek the full cost of replacement.
@@ -398,7 +472,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">10. PRIVACY AND DATA PROTECTION</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">10.1 Data Protection</h3>
                 <p className="mb-4">
                   We comply with the General Data Protection Regulation (GDPR) and Data Protection Act 2018:
@@ -425,7 +499,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">11. PROPERTY ACCESS BY OWNER</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">11.1 Emergency Access</h3>
                 <p className="mb-4">
                   We reserve the right to access the property in genuine emergencies that threaten safety or the property itself, for essential maintenance, or to verify guest numbers if we suspect unauthorised guests. If unauthorised guests are found, we reserve the right to immediately terminate the booking without a refund and you will be required to vacate the property.
@@ -439,7 +513,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">12. LIMITATION OF LIABILITY</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">12.1 Our Liability to You</h3>
                 <p className="mb-4">
                   Subject to Section 12.2, our total liability is limited to the total amount paid for your booking.
@@ -458,7 +532,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">13. FORCE MAJEURE</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">13.1 Definition</h3>
                 <p className="mb-4">
                   &ldquo;Force Majeure&rdquo; includes circumstances beyond our reasonable control:
@@ -485,7 +559,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">14. COMPLAINTS AND DISPUTE RESOLUTION</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">14.1 Complaints Procedure</h3>
                 <p className="mb-4">
                   Please report any issues or concerns to us immediately so we can try to resolve them within 24 hours.
@@ -497,7 +571,7 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">15. GENERAL PROVISIONS</h2>
-                
+
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">15.1 Entire Agreement</h3>
                 <p className="mb-4">
                   These Terms constitute the entire agreement between the parties and supersede all prior negotiations, representations, or agreements.
@@ -527,17 +601,83 @@ export default function TermsContent() {
 
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">ACKNOWLEDGMENT</h2>
-                
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <p className="font-semibold text-gray-800 mb-4">By paying your non-refundable booking deposit, you acknowledge that:</p>
-                  <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                    <li>You have read and understood these Terms and Conditions</li>
-                    <li>You agree to be bound by these Terms</li>
-                    <li>You will ensure all members of your party comply with these Terms</li>
-                    <li>You understand your cancellation and refund rights</li>
-                    <li>You have been provided with all required pre-contract information</li>
-                  </ul>
-                </div>
+
+                {isSuccess ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-green-50 border border-green-200 rounded-xl p-8 text-center"
+                  >
+                    <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold text-green-900 mb-2">Terms Signed Successfully</h3>
+                    <p className="text-green-700">
+                      Thank you, {name}. A copy of your signed agreement has been sent to the property owner.
+                    </p>
+                    <p className="text-green-600 text-sm mt-4">
+                      Date Signed: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sm:p-8">
+                    <p className="font-semibold text-gray-800 mb-6 text-lg">By signing below, you acknowledge and agree that:</p>
+                    <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-8">
+                      <li>You have read and understood these Terms and Conditions</li>
+                      <li>You agree to be bound by these Terms</li>
+                      <li>You will ensure all members of your party comply with these Terms</li>
+                      <li>You understand your cancellation and refund rights</li>
+                      <li>You have been provided with all required pre-contract information</li>
+                    </ul>
+
+                    <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                      <div>
+                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                          Full Name of Lead Guest
+                        </label>
+                        <input
+                          type="text"
+                          id="fullName"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg"
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                          Digital Signature
+                        </label>
+                        <SignaturePad onSave={setSignature} />
+                      </div>
+
+                      <div className="pt-4">
+                        <button
+                          type="submit"
+                          disabled={isSubmitting || !name || !signature}
+                          className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0
+                            ${(isSubmitting || !name || !signature)
+                              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                              : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-lg'}`}
+                        >
+                          {isSubmitting ? (
+                            <span className="flex items-center justify-center">
+                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Submitting...
+                            </span>
+                          ) : 'AGREE & SUBMIT'}
+                        </button>
+                      </div>
+
+                      <p className="text-center text-[10px] text-gray-400 font-mono">
+                        STAMPED: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </p>
+                    </form>
+                  </div>
+                )}
               </section>
 
               <footer className="text-center text-gray-500 text-sm mt-8 pt-8 border-t">
