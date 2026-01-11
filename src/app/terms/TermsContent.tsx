@@ -1,13 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PrinterIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/layout/Footer';
 import SignaturePad from '@/components/ui/SignaturePad';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function TermsContent() {
+  const termsRef = useRef<HTMLDivElement>(null);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [signature, setSignature] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -40,12 +44,69 @@ export default function TermsContent() {
     setIsSubmitting(true);
 
     try {
+      // 1. Generate PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const termsElement = termsRef.current;
+
+      if (!termsElement) throw new Error('Terms element not found');
+
+      // Temporarily hide parts we don't want in the PDF (like print button, signature pad)
+      const printButton = termsElement.querySelector('.print\\:hidden');
+      const signatureForm = termsElement.querySelector('form');
+      if (printButton) (printButton as HTMLElement).style.display = 'none';
+      if (signatureForm) (signatureForm as HTMLElement).style.display = 'none';
+
+      const canvas = await html2canvas(termsElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        windowWidth: termsElement.scrollWidth,
+        windowHeight: termsElement.scrollHeight
+      });
+
+      // Show them back
+      if (printButton) (printButton as HTMLElement).style.display = '';
+      if (signatureForm) (signatureForm as HTMLElement).style.display = '';
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      let heightLeft = pdfHeight;
+      let position = 0;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Add Signature and Date to a new page at the end
+      pdf.addPage();
+      pdf.setFontSize(20);
+      pdf.text('Execution & Agreement', 20, 30);
+      pdf.setFontSize(12);
+      pdf.text(`Lead Guest: ${name}`, 20, 50);
+      pdf.text(`Email: ${email}`, 20, 60);
+      pdf.text(`Date Signed: ${new Date().toLocaleDateString('en-GB')}`, 20, 70);
+      pdf.text('Signature:', 20, 85);
+      pdf.addImage(signature, 'PNG', 20, 90, 100, 40);
+
+      const pdfBlob = pdf.output('blob');
+
+      // 2. Prepare Web3Forms submission
       const formData = new FormData();
-      // Using the access key found in other forms
       formData.append('access_key', process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || 'fbfa8107-b8e1-4536-b398-3418f9e4d5ea');
       formData.append('subject', `Signed Terms & Conditions - ${name}`);
       formData.append('from_name', 'The Luxury House Agreement');
       formData.append('Name', name);
+      formData.append('email', email); // For Autoresponder
+      formData.append('replyto', email); // So owner can reply
       formData.append('Date Signed', new Date().toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'long',
@@ -54,9 +115,11 @@ export default function TermsContent() {
         minute: '2-digit'
       }));
 
-      const blob = dataURLtoBlob(signature);
-      if (blob) {
-        formData.append('Signature', blob, 'signature.png');
+      formData.append('Signed_Terms_PDF', pdfBlob, 'Signed_Terms.pdf');
+
+      const sigBlob = dataURLtoBlob(signature);
+      if (sigBlob) {
+        formData.append('Signature_PNG', sigBlob, 'signature.png');
       }
 
       const response = await fetch('https://api.web3forms.com/submit', {
@@ -122,8 +185,8 @@ export default function TermsContent() {
           }
         }
       `}</style>
-      <div className="min-h-screen bg-gray-50 py-12 print:py-0">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 print:max-w-full print:mx-0 print:px-0">
+      <div id="terms-container" ref={termsRef} className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 print:p-0">
+        <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden print:shadow-none print:w-full">
           <div className="bg-white rounded-lg shadow-lg p-8 print:shadow-none print:rounded-none">
             <header className="text-center mb-8">
               <div className="flex justify-between items-start mb-6">
@@ -633,9 +696,27 @@ export default function TermsContent() {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           required
-                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg"
+                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg mb-4"
                           placeholder="Enter your full name"
                         />
+                      </div>
+
+                      <div>
+                        <label htmlFor="emailAddress" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          id="emailAddress"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg"
+                          placeholder="Your email address"
+                        />
+                        <p className="text-[10px] text-gray-500 mt-1 italic">
+                          A copy of the signed agreement will be sent to this email.
+                        </p>
                       </div>
 
                       <div>
@@ -648,9 +729,9 @@ export default function TermsContent() {
                       <div className="pt-4">
                         <button
                           type="submit"
-                          disabled={isSubmitting || !name || !signature}
+                          disabled={isSubmitting || !name || !email || !signature}
                           className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0
-                            ${(isSubmitting || !name || !signature)
+                            ${(isSubmitting || !name || !email || !signature)
                               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                               : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-lg'}`}
                         >
@@ -675,11 +756,7 @@ export default function TermsContent() {
               </section>
 
               <footer className="text-center text-gray-500 text-sm mt-8 pt-8 border-t">
-                <p>This document was last updated on January 2026.</p>
-                <p>We recommend guests keep a copy for their records.</p>
-                <div className="mt-4">
-                  <p>For questions about these terms, please contact us through our booking system.</p>
-                </div>
+                <p>A copy of the signed Terms & Conditions will be emailed to you.</p>
               </footer>
             </div>
           </div>
