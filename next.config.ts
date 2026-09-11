@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
     // This allows deployment to proceed even with type errors in unused files
     ignoreBuildErrors: true,
   },
+  // Canonical host is the apex, matching the canonical tag and sitemap.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.theluxuryhouse.uk' }],
+        destination: 'https://theluxuryhouse.uk/:path*',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
