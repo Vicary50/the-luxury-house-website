@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -74,51 +77,29 @@ export async function POST(request: NextRequest) {
       <p style="color: #666; font-size: 12px;">The Luxury House | Beautiful East Yorkshire, United Kingdom</p>
     `;
 
-    // Send email to property owner using Maildiver
-    const emailPayload = {
+    // Send email to property owner using Resend
+    const { error: ownerEmailError } = await resend.emails.send({
       from: 'The Luxury House <noreply@theluxuryhouse.uk>',
       to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com',
-      reply_to: `${name} <${email}>`,
+      replyTo: `${name} <${email}>`,
       subject: `New Inquiry from ${name} - ${accommodationName}`,
       html: emailHtml
-    };
-
-    console.log('Sending email with payload:', JSON.stringify(emailPayload, null, 2));
-
-    const ownerEmailResponse = await fetch('https://api.maildiver.com/v1/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailPayload),
     });
 
-    console.log('Maildiver response status:', ownerEmailResponse.status);
-
-    if (!ownerEmailResponse.ok) {
-      const errorData = await ownerEmailResponse.json();
-      console.error('Maildiver error response:', JSON.stringify(errorData, null, 2));
-      console.error('Response status:', ownerEmailResponse.status);
+    if (ownerEmailError) {
+      console.error('Resend error:', ownerEmailError);
       return NextResponse.json(
-        { error: 'Failed to send email', details: errorData },
+        { error: 'Failed to send email', details: ownerEmailError },
         { status: 500 }
       );
     }
 
     // Send confirmation email to customer
-    await fetch('https://api.maildiver.com/v1/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.MAILDIVER_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'The Luxury House <noreply@theluxuryhouse.uk>',
-        to: email,
-        subject: 'Thank you for your inquiry - The Luxury House',
-        html: confirmationHtml
-      }),
+    await resend.emails.send({
+      from: 'The Luxury House <noreply@theluxuryhouse.uk>',
+      to: email,
+      subject: 'Thank you for your inquiry - The Luxury House',
+      html: confirmationHtml
     });
 
     return NextResponse.json({

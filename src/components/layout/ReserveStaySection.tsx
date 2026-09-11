@@ -110,56 +110,24 @@ export default function ReserveStaySection() {
     }
 
     try {
-      // Calculate nights for display
-      const nights = Math.ceil((formData.checkOutDate.getTime() - formData.checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-      const accommodationName = formData.accommodationType === 'entire-property'
-        ? 'The Luxury House - Main House, Pool Villa, Heated Swimming Pool'
-        : 'Pool Villa & Heated Swimming Pool';
-
-      const priceBreakdown = getPriceBreakdown();
-
-      // Prepare form data for Web3Forms
-      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-
-      const web3FormsData = new FormData();
-      web3FormsData.append('access_key', accessKey || 'fbfa8107-b8e1-4536-b398-3418f9e4d5ea');
-      web3FormsData.append('subject', `New Inquiry from ${formData.name} - ${accommodationName}`);
-      web3FormsData.append('from_name', 'The Luxury House Contact Form');
-
-      // Web3Forms requires 'email' field - this will be the reply-to address
-      web3FormsData.append('email', formData.email);
-
-      // Add all custom form fields with descriptive names
-      web3FormsData.append('Customer Name', formData.name);
-      web3FormsData.append('Customer Email', formData.email);
-      web3FormsData.append('Telephone', formData.telephone);
-      web3FormsData.append('Accommodation Type', accommodationName);
-      web3FormsData.append('Check-in Date', formData.checkInDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      web3FormsData.append('Check-out Date', formData.checkOutDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      web3FormsData.append('Number of Nights', nights.toString());
-      web3FormsData.append('Number of Adults', formData.numberOfAdults.toString());
-      web3FormsData.append('Number of Children (2-12 years)', formData.numberOfChildren.toString());
-      web3FormsData.append('Number of Infants (under 2)', formData.numberOfInfants.toString());
-      web3FormsData.append('Total Guests', (formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants).toString());
-
-      // Add price breakdown if available
-      if (priceBreakdown) {
-        web3FormsData.append('Estimated Total Cost', `£${priceBreakdown.totalCost.toLocaleString()}`);
-        web3FormsData.append('Cost Per Night', `£${Math.round(priceBreakdown.perNightCost).toLocaleString()}`);
-      }
-
-      // Bot protection honeypot (hidden field)
-      web3FormsData.append('botcheck', '');
-
-      // Submit to Web3Forms
-      const response = await fetch('https://api.web3forms.com/submit', {
+      // Submit to our Resend-backed API route
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        body: web3FormsData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          telephone: formData.telephone,
+          accommodationType: formData.accommodationType,
+          checkInDate: formData.checkInDate,
+          checkOutDate: formData.checkOutDate,
+          numberOfAdults: formData.numberOfAdults,
+          numberOfChildren: formData.numberOfChildren,
+          numberOfInfants: formData.numberOfInfants
+        })
       });
 
-      const result = await response.json();
-
-      if (result.success) {
+      if (response.ok) {
         setAvailabilityStatus('available');
 
         // Show success message and reset form

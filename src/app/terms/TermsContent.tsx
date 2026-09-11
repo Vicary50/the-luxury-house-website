@@ -6,7 +6,6 @@ import { PrinterIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/layout/Footer';
 import SignaturePad from '@/components/ui/SignaturePad';
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 export default function TermsContent() {
   const termsRef = useRef<HTMLDivElement>(null);
@@ -20,21 +19,6 @@ export default function TermsContent() {
     window.print();
   };
 
-  const dataURLtoBlob = (dataurl: string) => {
-    const arr = dataurl.split(',');
-    if (arr.length < 2) return null;
-    const mimeMatch = arr[0].match(/:(.*?);/);
-    if (!mimeMatch) return null;
-    const mime = mimeMatch[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], { type: mime });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!signature) {
@@ -44,102 +28,132 @@ export default function TermsContent() {
     setIsSubmitting(true);
 
     try {
-      // 1. Generate PDF
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const termsElement = termsRef.current;
+      // 1. Generate PDF directly using Text (to avoid HTML2Canvas CSS issues)
+      const doc = new jsPDF('p', 'mm', 'a4');
+      const margin = 20;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const contentWidth = pageWidth - (margin * 2);
+      let yPos = 30;
 
-      if (!termsElement) throw new Error('Terms element not found');
+      const addText = (text: string, fontSize = 11, isBold = false, marginBottom = 5) => {
+        doc.setFontSize(fontSize);
+        doc.setFont('helvetica', isBold ? 'bold' : 'normal');
 
-      // Temporarily hide parts we don't want in the PDF (like print button, signature pad)
-      const printButton = termsElement.querySelector('.print\\:hidden');
-      const signatureForm = termsElement.querySelector('form');
-      if (printButton) (printButton as HTMLElement).style.display = 'none';
-      if (signatureForm) (signatureForm as HTMLElement).style.display = 'none';
+        const lines = doc.splitTextToSize(text, contentWidth);
+        const textHeight = (lines.length * fontSize * 0.352778) + marginBottom;
 
-      const canvas = await html2canvas(termsElement, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        windowWidth: termsElement.scrollWidth,
-        windowHeight: termsElement.scrollHeight
-      });
+        if (yPos + textHeight > 280) {
+          doc.addPage();
+          yPos = 20;
+        }
 
-      // Show them back
-      if (printButton) (printButton as HTMLElement).style.display = '';
-      if (signatureForm) (signatureForm as HTMLElement).style.display = '';
+        doc.text(lines, margin, yPos);
+        yPos += textHeight;
+      };
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      // Header
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text('THE LUXURY HOUSE', margin, yPos);
+      yPos += 10;
+      doc.setFontSize(14);
+      doc.text('TERMS AND CONDITIONS', margin, yPos);
+      yPos += 8;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Effective Date: January 2026', margin, yPos);
+      yPos += 15;
 
-      let heightLeft = pdfHeight;
-      let position = 0;
-      const pageHeight = pdf.internal.pageSize.getHeight();
+      // Content Sections
+      addText('1. PARTIES AND AGREEMENT', 14, true, 8);
+      addText('These Terms and Conditions (“Terms”) form a legally binding contract between the owner of The Luxury House (referred to as “we,” “us,” “our,” or “the Property Owner”) and the person making the booking (“you,” “your,” or “the Lead Guest”).', 11, false, 6);
+      addText('By making this booking, you confirm that you are at least 21 years of age and have the authority to enter into this agreement on behalf of everyone in your party. You also confirm that you have read, understood, and agreed to these terms and conditions, and that you will ensure all members of your party comply with them. You understand your cancellation and refund rights, and you acknowledge that you have been provided with all the necessary pre-contract information.', 11, false, 6);
+      addText('These Terms comply with the Consumer Rights Act 2015, Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013, and relevant UK consumer protection legislation.', 11, false, 12);
 
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-      heightLeft -= pageHeight;
+      addText('2. BOOKING PROCESS AND CONFIRMATION', 14, true, 8);
+      addText('2.1 Booking Confirmation', 12, true, 5);
+      addText('A booking becomes legally binding when you receive our written booking confirmation and pay the required booking deposit.', 11, false, 6);
+      addText('2.2 Information Accuracy', 12, true, 5);
+      addText('You must ensure all information provided is accurate and complete. Any changes must be notified immediately and may be subject to additional charges or availability.', 11, false, 12);
 
-      while (heightLeft >= 0) {
-        position = heightLeft - pdfHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-        heightLeft -= pageHeight;
-      }
+      addText('3. PAYMENT TERMS', 14, true, 8);
+      addText('3.1 Deposit Requirements', 12, true, 5);
+      addText('• Booking Deposit: £1,000 (non-refundable)', 11, false, 3);
+      addText('• Security Deposit: £500 (refundable)', 11, false, 6);
+      addText('3.2 Balance Payment', 12, true, 5);
+      addText('Full balance is due 30 calendar days before your arrival date. Failure to pay the balance by the due date constitutes cancellation of your booking. We reserve the right to re-let the property and retain the booking deposit.', 11, false, 6);
+      addText('3.3 Security Deposit', 12, true, 5);
+      addText('The security deposit covers accidental damage, additional cleaning, missing items, or breach of terms. Refunds are processed within 7 calendar days of departure following inspection.', 11, false, 12);
 
-      // Add Signature and Date to a new page at the end
-      pdf.addPage();
-      pdf.setFontSize(20);
-      pdf.text('Execution & Agreement', 20, 30);
-      pdf.setFontSize(12);
-      pdf.text(`Lead Guest: ${name}`, 20, 50);
-      pdf.text(`Email: ${email}`, 20, 60);
-      pdf.text(`Date Signed: ${new Date().toLocaleDateString('en-GB')}`, 20, 70);
-      pdf.text('Signature:', 20, 85);
-      pdf.addImage(signature, 'PNG', 20, 90, 100, 40);
+      addText('4. CANCELLATION AND REFUND POLICY', 14, true, 8);
+      addText('4.1 Guest Cancellations', 12, true, 5);
+      addText('• More than 30 days before arrival: Booking deposit retained; security deposit and balance refunded.', 11, false, 4);
+      addText('• Less than 30 days before arrival: Booking deposit and balance retained; security deposit refunded.', 11, false, 8);
+      addText('4.2 Property Owner Cancellations', 12, true, 5);
+      addText('In the unlikely event we must cancel, you receive a full refund of all payments made.', 11, false, 12);
 
-      const pdfBlob = pdf.output('blob');
+      addText('5. CHECK-IN AND CHECK-OUT', 14, true, 8);
+      addText('Check-in is from 3:00 PM; Check-out is by 11:00 AM. Detailed instructions provided 48 hours before arrival.', 11, false, 12);
 
-      // 2. Prepare Web3Forms submission
-      const formData = new FormData();
-      formData.append('access_key', process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || 'fbfa8107-b8e1-4536-b398-3418f9e4d5ea');
-      formData.append('subject', `Signed Terms & Conditions - ${name}`);
-      formData.append('from_name', 'The Luxury House Agreement');
-      formData.append('Name', name);
-      formData.append('email', email); // For Autoresponder
-      formData.append('replyto', email); // So owner can reply
-      formData.append('Date Signed', new Date().toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }));
+      addText('6. OCCUPANCY AND PROPERTY USE', 14, true, 8);
+      addText('Maximum occupancy is 16 people (14 adults, 2 children). Unauthorized additional guests may result in immediate termination of booking. Quiet hours are 10:00 PM to 8:00 AM. Smoking and pets are strictly prohibited.', 11, false, 12);
 
-      formData.append('Signed_Terms_PDF', pdfBlob, 'Signed_Terms.pdf');
+      addText('7. PROPERTY FACILITIES AND SAFETY', 14, true, 8);
+      addText('Use of pool, sauna, and fire pit is at guests\' own risk. No lifeguard on duty. Children must be supervised at all times. No glass in pool area.', 11, false, 12);
 
-      const sigBlob = dataURLtoBlob(signature);
-      if (sigBlob) {
-        formData.append('Signature_PNG', sigBlob, 'signature.png');
-      }
+      addText('8. GUEST RESPONSIBILITIES', 14, true, 8);
+      addText('Guests must treat the property with care, use appliances properly, and report damage immediately. Please leave the property clean and tidy upon departure.', 11, false, 12);
 
-      const response = await fetch('https://api.web3forms.com/submit', {
+      // Execution Page
+      doc.addPage();
+      yPos = 30;
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text('EXECUTION & AGREEMENT', margin, yPos);
+      yPos += 20;
+
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Lead Guest: ${name}`, margin, yPos);
+      yPos += 10;
+      doc.text(`Email: ${email}`, margin, yPos);
+      yPos += 10;
+      doc.text(`Date Signed: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, margin, yPos);
+      yPos += 20;
+
+      doc.text('Digital Signature:', margin, yPos);
+      yPos += 10;
+      doc.addImage(signature, 'PNG', margin, yPos, 80, 30);
+      yPos += 40;
+
+      doc.setFontSize(10);
+      doc.text('I confirm that I have read, understood, and agree to be bound by these Terms and Conditions.', margin, yPos);
+
+      const pdfBlob = doc.output('blob');
+
+      // 2. Submit to our Resend-backed API route
+      const formPacket = new FormData();
+      formPacket.append('Name', name);
+      formPacket.append('email', email);
+      formPacket.append('Date Signed', new Date().toLocaleString('en-GB'));
+      formPacket.append('Signed_Terms_PDF', pdfBlob, 'Signed_Terms.pdf');
+
+      const response = await fetch('/api/sign-terms', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        },
-        body: formData
+        body: formPacket
       });
 
       const result = await response.json();
-      if (result.success) {
+      if (response.ok) {
         setIsSuccess(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        alert(result.message || 'Error submitting form. Please try again.');
+        console.error('Sign-terms error:', result);
+        alert(result.error || 'Error submitting form. Please try again.');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      alert('Failed to send. Please check your connection.');
+      alert(`Submission error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -187,7 +201,7 @@ export default function TermsContent() {
       `}</style>
       <div id="terms-container" ref={termsRef} className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 print:p-0">
         <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden print:shadow-none print:w-full">
-          <div className="bg-white rounded-lg shadow-lg p-8 print:shadow-none print:rounded-none">
+          <div id="terms-pdf-content" className="bg-white rounded-lg shadow-lg p-8 print:shadow-none print:rounded-none">
             <header className="text-center mb-8">
               <div className="flex justify-between items-start mb-6">
                 <div className="flex-1"></div>
@@ -655,111 +669,111 @@ export default function TermsContent() {
                   These Terms do not affect your statutory rights as a consumer under UK law.
                 </p>
               </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">ACKNOWLEDGMENT</h2>
-
-                {isSuccess ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-green-50 border border-green-200 rounded-xl p-8 text-center"
-                  >
-                    <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-green-900 mb-2">Terms Signed Successfully</h3>
-                    <p className="text-green-700">
-                      Thank you, {name}. A copy of your signed agreement has been sent to the property owner.
-                    </p>
-                    <p className="text-green-600 text-sm mt-4">
-                      Date Signed: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                    </p>
-                  </motion.div>
-                ) : (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sm:p-8">
-                    <p className="font-semibold text-gray-800 mb-6 text-lg">By signing below, you acknowledge and agree that:</p>
-                    <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-8">
-                      <li>You have read and understood these Terms and Conditions</li>
-                      <li>You agree to be bound by these Terms</li>
-                      <li>You will ensure all members of your party comply with these Terms</li>
-                      <li>You understand your cancellation and refund rights</li>
-                      <li>You have been provided with all required pre-contract information</li>
-                    </ul>
-
-                    <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                      <div>
-                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
-                          Full Name of Lead Guest
-                        </label>
-                        <input
-                          type="text"
-                          id="fullName"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          required
-                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg mb-4"
-                          placeholder="Enter your full name"
-                        />
-                      </div>
-
-                      <div>
-                        <label htmlFor="emailAddress" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
-                          Email Address
-                        </label>
-                        <input
-                          type="email"
-                          id="emailAddress"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg"
-                          placeholder="Your email address"
-                        />
-                        <p className="text-[10px] text-gray-500 mt-1 italic">
-                          A copy of the signed agreement will be sent to this email.
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
-                          Digital Signature
-                        </label>
-                        <SignaturePad onSave={setSignature} />
-                      </div>
-
-                      <div className="pt-4">
-                        <button
-                          type="submit"
-                          disabled={isSubmitting || !name || !email || !signature}
-                          className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0
-                            ${(isSubmitting || !name || !email || !signature)
-                              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                              : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-lg'}`}
-                        >
-                          {isSubmitting ? (
-                            <span className="flex items-center justify-center">
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                              Submitting...
-                            </span>
-                          ) : 'AGREE & SUBMIT'}
-                        </button>
-                      </div>
-
-                      <p className="text-center text-[10px] text-gray-400 font-mono">
-                        STAMPED: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </p>
-                    </form>
-                  </div>
-                )}
-              </section>
-
-              <footer className="text-center text-gray-500 text-sm mt-8 pt-8 border-t">
-                <p>A copy of the signed Terms & Conditions will be emailed to you.</p>
-              </footer>
             </div>
           </div>
+
+          <section className="p-8 border-t border-gray-100 bg-gray-50/50">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 uppercase">Acknowledgment</h2>
+
+            {isSuccess ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-green-50 border border-green-200 rounded-xl p-8 text-center"
+              >
+                <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-green-900 mb-2">Terms Signed Successfully</h3>
+                <p className="text-green-700">
+                  Thank you, {name}. A copy of your signed agreement has been sent to the property owner.
+                </p>
+                <p className="text-green-600 text-sm mt-4">
+                  Date Signed: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </motion.div>
+            ) : (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sm:p-8">
+                <p className="font-semibold text-gray-800 mb-6 text-lg">By signing below, you acknowledge and agree that:</p>
+                <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-8">
+                  <li>You have read and understood these Terms and Conditions</li>
+                  <li>You agree to be bound by these Terms</li>
+                  <li>You will ensure all members of your party comply with these Terms</li>
+                  <li>You understand your cancellation and refund rights</li>
+                  <li>You have been provided with all required pre-contract information</li>
+                </ul>
+
+                <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <div>
+                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                      Full Name of Lead Guest
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg mb-4"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="emailAddress" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="emailAddress"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border-b-2 border-gray-200 focus:border-amber-500 focus:outline-none transition-colors text-lg"
+                      placeholder="Your email address"
+                    />
+                    <p className="text-[10px] text-gray-500 mt-1 italic">
+                      A copy of the signed agreement will be sent to this email.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wider">
+                      Digital Signature
+                    </label>
+                    <SignaturePad onSave={setSignature} />
+                  </div>
+
+                  <div className="pt-4">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !name || !email || !signature}
+                      className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0
+                            ${(isSubmitting || !name || !email || !signature)
+                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                          : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-lg'}`}
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Submitting...
+                        </span>
+                      ) : 'AGREE & SUBMIT'}
+                    </button>
+                  </div>
+
+                  <p className="text-center text-[10px] text-gray-400 font-mono">
+                    STAMPED: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </form>
+              </div>
+            )}
+          </section>
+
+          <footer className="text-center text-gray-500 text-sm mt-8 pt-8 border-t">
+            <p>A copy of the signed Terms & Conditions will be emailed to you.</p>
+          </footer>
         </div>
       </div>
       <Footer />
