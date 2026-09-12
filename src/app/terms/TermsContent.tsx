@@ -684,7 +684,7 @@ export default function TermsContent() {
                 <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-green-900 mb-2">Terms Signed Successfully</h3>
                 <p className="text-green-700">
-                  Thank you, {name}. A copy of your signed agreement has been sent to the property owner.
+                  Thank you, {name}. A copy of your signed agreement has been sent to the property owner, and a copy has been emailed to you at {email}.
                 </p>
                 <p className="text-green-600 text-sm mt-4">
                   Date Signed: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}

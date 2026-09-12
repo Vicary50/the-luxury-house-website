@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { rateLimit } from '@/lib/rateLimit';
+import { escapeHtml } from '@/lib/escapeHtml';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -53,23 +54,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Resend parses replyTo as `Display Name <addr>`; angle brackets or newlines
+    // in an untrusted name break that parse and 422 the submission.
+    const replyToName = String(name).replace(/[<>\r\n]/g, ' ').trim();
+    const attachments = [{ filename: 'Signed_Terms.pdf', content: pdfBuffer }];
+
     const { error } = await resend.emails.send({
       from: 'The Luxury House <noreply@theluxuryhouse.uk>',
       to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com',
-      replyTo: `${name} <${email}>`,
+      replyTo: `${replyToName} <${email}>`,
       subject: `Signed Terms & Conditions - ${name}`,
       html: `
         <h2>Signed Terms &amp; Conditions</h2>
-        <p><strong>Lead Guest:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Date Signed:</strong> ${dateSigned}</p>
+        <p><strong>Lead Guest:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Date Signed:</strong> ${escapeHtml(dateSigned)}</p>
       `,
-      attachments: [
-        {
-          filename: 'Signed_Terms.pdf',
-          content: pdfBuffer
-        }
-      ]
+      attachments
     });
 
     if (error) {
@@ -78,6 +79,32 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to send signed terms', details: error },
         { status: 500 }
       );
+    }
+
+    // Give the signer their own copy of the contract they just signed.
+    // Best-effort: the owner already holds the signed PDF, so a failure here
+    // must not make the guest re-sign and send the owner a duplicate.
+    const { error: copyError } = await resend.emails.send({
+      from: 'The Luxury House <noreply@theluxuryhouse.uk>',
+      to: email,
+      subject: 'Your signed Terms & Conditions - The Luxury House',
+      html: `
+        <h2>Your signed Terms &amp; Conditions</h2>
+        <p>Dear ${escapeHtml(name)},</p>
+        <p>Thank you for signing our Terms &amp; Conditions. A copy of the document
+        you signed is attached to this email for your records.</p>
+        <p><strong>Date Signed:</strong> ${escapeHtml(dateSigned)}</p>
+        <p>If you have any questions about these terms, reply to this email or
+        contact us at ${escapeHtml(process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'theluxuryhouseuk@gmail.com')}.</p>
+        <p>Best regards,<br>The Luxury House Team</p>
+        <hr>
+        <p style="color: #666; font-size: 12px;">The Luxury House | Beautiful East Yorkshire, United Kingdom</p>
+      `,
+      attachments
+    });
+
+    if (copyError) {
+      console.error('Resend error sending signer copy:', copyError);
     }
 
     return NextResponse.json({ message: 'Signed terms sent successfully' });
