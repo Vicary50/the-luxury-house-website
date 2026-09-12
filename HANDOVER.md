@@ -120,8 +120,10 @@ npm run build
 4. **Clear the 6 pre-existing type errors** — needs its own pass; `ignoreBuildErrors` is hiding them.
 5. *(Optional)* Move rate limiting to Vercel KV if abuse becomes real.
 
-### Stale docs — read with caution
+### Docs
 
-`DEPLOYMENT.md` and `README.md` still describe a **Netlify** deployment and predate the Vercel
-migration. This file is the current source of truth. `BOOKING_SETUP.md`, `STRIPE_SETUP.md` and
-`GOOGLE_SHEETS_SETUP.md` describe features that are not wired up in production.
+`README.md` (orientation + local dev) and `DEPLOYMENT.md` (deploy + operations) were rewritten for
+Vercel on 2026-09-12 and are current.
+
+`BOOKING_SETUP.md`, `STRIPE_SETUP.md` and `GOOGLE_SHEETS_SETUP.md` describe features that are **not
+wired up in production**. Treat them as proposals, not documentation.

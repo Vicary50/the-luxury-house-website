@@ -1,326 +1,238 @@
-# The Luxury House - Deployment Guide
+# The Luxury House — Deployment & Operations
 
-This guide will help you deploy The Luxury House website to production.
+The site is **already deployed**. This describes how it runs and how to operate it, not how to set
+it up from scratch.
 
-## Prerequisites
+**Live:** https://theluxuryhouse.uk (+ `www` → apex, 308 redirect)
 
-- GitHub account
-- Netlify account (free tier is sufficient)
-- Resend account for email (free tier: 100 emails/day)
-- Optional: Google account for Google Sheets integration
+Migrated from Netlify to Vercel on 2026-09-12. If you are reading Netlify instructions anywhere in
+this repo, they are out of date.
 
 ---
 
-## Step 1: Push to GitHub
+## The setup
 
-### Option A: Using GitHub Web Interface
+| | |
+|---|---|
+| **Host** | Vercel — project `the-luxury-house-website` (`prj_hh21c5DCCZmQdmhwBK2kECtrvx2z`), team `vakarri-gmailcoms-projects` |
+| **Repo** | `Vicary50/the-luxury-house-website`, connected to Vercel |
+| **Branch** | `main` — pushing to it deploys to production |
+| **Build** | `npm run build` (Next.js 16 / Turbopack), output `.next` |
+| **Email** | Resend, domain `theluxuryhouse.uk` verified in `eu-west-1` |
+| **Sender** | `The Luxury House <noreply@theluxuryhouse.uk>` |
+| **DNS** | Namecheap (`dns1`/`dns2.registrar-servers.com`) |
 
-1. Go to https://github.com/new
-2. Create a new repository:
-   - Repository name: `the-luxury-house-website`
-   - Visibility: Public or Private (your choice)
-   - **Do NOT** initialize with README, .gitignore, or license
-3. Copy the repository URL (e.g., `https://github.com/YOUR_USERNAME/the-luxury-house-website.git`)
-4. Open Terminal and run:
+### DNS records
+
+Both apex and `www` are plain A records pointing at Vercel:
+
+```
+A   @     76.76.21.21
+A   www   76.76.21.21
+```
+
+`www` → apex is a **308 redirect from `next.config.ts`**, not a DNS rule. Netlify used to do this
+implicitly; Vercel does not, so the redirect lives in the app.
+
+### Environment variables (Vercel → Settings → Environment Variables)
+
+| Variable | Notes |
+|---|---|
+| `RESEND_API_KEY` | Required. All outbound email. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Owner inbox for enquiries and signed terms. |
+| `NEXT_PUBLIC_SITE_URL` | Used in email footers. |
+| `MAILDIVER_API_KEY` | **Unused** since `c471571`. Kept only for rollback. |
+
+That is the complete list. `NODE_VERSION` is not needed on Vercel.
+
+**`NEXT_PUBLIC_*` variables are inlined at build time.** Changing one requires a redeploy, not just
+a restart. This matters when redirecting test email away from the owner's real inbox.
+
+---
+
+## Deploying
 
 ```bash
-cd "/Users/vasukarri/Desktop/Saas & AI projects/4. The Haven website codebase/the-haven-website"
-git remote add origin https://github.com/YOUR_USERNAME/the-luxury-house-website.git
-git branch -M main
-git push -u origin main
-```
-
-### Option B: Using GitHub CLI (if installed)
-
-```bash
-cd "/Users/vasukarri/Desktop/Saas & AI projects/4. The Haven website codebase/the-haven-website"
-gh repo create the-luxury-house-website --public --source=. --remote=origin --push
-```
-
----
-
-## Step 2: Set Up Email Service (Resend)
-
-1. Go to https://resend.com and sign up for a free account
-2. Verify your email address
-3. Go to **API Keys** section
-4. Click **Create API Key**
-5. Give it a name (e.g., "The Luxury House Production")
-6. Copy the API key (starts with `re_`) - **you'll only see this once!**
-7. Save it securely - you'll need it for Netlify
-
-### Verify Your Domain (Important!)
-
-To send emails from your own domain:
-
-1. Go to **Domains** in Resend dashboard
-2. Click **Add Domain**
-3. Enter your domain (e.g., `www.theluxuryhouse.uk`)
-4. Follow the instructions to add DNS records
-5. Wait for verification (usually takes a few minutes)
-
-**Until domain is verified**, emails will be sent from `onboarding@resend.dev`
-
-After verification, update the email sender in:
-- `src/app/api/contact/route.ts` (line 37 and 67)
-- Change `noreply@www.theluxuryhouse.uk` to your actual domain
-
----
-
-## Step 3: Deploy to Netlify
-
-### 3.1 Create Netlify Account
-
-1. Go to https://netlify.com
-2. Sign up with your GitHub account (recommended)
-3. Authorize Netlify to access your GitHub repositories
-
-### 3.2 Deploy Website
-
-1. Click **Add new site** → **Import an existing project**
-2. Choose **GitHub**
-3. Search for and select `the-luxury-house-website`
-4. Configure build settings:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `.next`
-   - **Base directory**: (leave empty)
-5. Click **Show advanced** → **New variable** and add:
-
-```
-NODE_VERSION = 18
-```
-
-6. **DO NOT** click Deploy yet! First, add environment variables.
-
-### 3.3 Add Environment Variables
-
-Still on the deployment configuration page, add these environment variables:
-
-#### Required:
-```
-RESEND_API_KEY = re_your_api_key_from_resend
-NEXT_PUBLIC_CONTACT_EMAIL = theluxuryhouseuk@gmail.com
-NEXT_PUBLIC_SITE_URL = https://YOUR_SITE.netlify.app
-```
-
-#### Optional:
-```
-```
-
-7. Click **Deploy site**
-
-### 3.4 Wait for Deployment
-
-- First deployment takes 2-5 minutes
-- Watch the deploy logs for any errors
-- Once complete, you'll get a URL like `https://random-name-123.netlify.app`
-
----
-
-## Step 4: Configure Custom Domain (Optional)
-
-### 4.1 In Netlify:
-
-1. Go to **Site settings** → **Domain management**
-2. Click **Add custom domain**
-3. Enter your domain (e.g., `www.theluxuryhouse.uk`)
-4. Netlify will provide DNS instructions
-
-### 4.2 Update DNS Records:
-
-Add these records at your domain registrar:
-
-**For root domain (www.theluxuryhouse.uk):**
-```
-Type: A
-Name: @
-Value: 75.2.60.5
-```
-
-**For www subdomain:**
-```
-Type: CNAME
-Name: www
-Value: YOUR_SITE.netlify.app
-```
-
-### 4.3 Enable HTTPS:
-
-1. In Netlify, go to **Site settings** → **Domain management**
-2. Wait for SSL certificate (automatic, takes 1-2 minutes)
-3. Enable **Force HTTPS**
-
-### 4.4 Update Environment Variables:
-
-In Netlify **Site settings** → **Environment variables**, update:
-```
-NEXT_PUBLIC_SITE_URL = https://www.theluxuryhouse.uk
-```
-
-Then redeploy:
-1. Go to **Deploys**
-2. Click **Trigger deploy** → **Deploy site**
-
----
-
-## Step 5: Test Everything
-
-### Test Contact Form:
-1. Go to your live site
-2. Fill out the contact form
-3. Submit an inquiry
-4. Check if you receive:
-   - Email notification to theluxuryhouseuk@gmail.com
-   - Confirmation email to the customer's email
-
-### Test Navigation:
-- Smooth scrolling to sections
-- Gallery filtering
-- Blog posts and categories
-- Mobile menu functionality
-
-### Test Pool Villa Validation:
-1. Select "Pool Villa & Heated Swimming Pool"
-2. Try entering more than 3 adults (should be blocked)
-3. Enter 3 adults - children field should disable
-4. Verify pricing calculations are correct
-
----
-
-## Step 6: Set Up Automatic Deployments
-
-Netlify automatically deploys when you push to GitHub!
-
-To make a change:
-```bash
-# Make your changes
 git add .
-git commit -m "Your change description"
-git push
+git commit -m "Describe the change"
+git push origin main
 ```
 
-Netlify will automatically:
-1. Detect the push
-2. Build the site
-3. Deploy the new version
-4. Keep the old version as backup
+Vercel builds and promotes automatically, typically in under a minute. Previous deployments stay
+available for instant rollback in the Vercel dashboard.
+
+To deploy without pushing (rare — use only when the Git integration misbehaves):
+
+```bash
+npx vercel --prod --yes
+```
+
+### Verifying a deploy actually landed
+
+```bash
+curl -sSI https://theluxuryhouse.uk/ | grep -iE "^HTTP|content-security-policy|x-vercel-id"
+```
+
+---
+
+## Security headers
+
+Set in the `headers()` block of `next.config.ts`:
+
+- `Content-Security-Policy`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+
+**HSTS is deliberately not set here.** Vercel already sends
+`strict-transport-security: max-age=63072000` on the custom domain; adding it would duplicate the
+header.
+
+The CSP keeps `'unsafe-inline'` for **both script and style**, and this is load-bearing. Next's
+inline hydration/flight bootstrap, the JSON-LD block in `StructuredData`, styled-jsx in
+`TermsContent`, `next/font` and framer-motion all inject inline script or style. Removing it
+requires per-request nonces from middleware, which costs the static prerendering the marketing
+pages currently get. `'unsafe-eval'` and `ws:` are added for **dev only** via a `NODE_ENV` check.
+
+If you add a third-party script, image host or API, the CSP must be widened or it will fail
+**silently** in the browser. Image hosts currently allowed: `placehold.co`,
+`images.unsplash.com` (these must also be listed in `images.remotePatterns`).
+
+---
+
+## Email
+
+### An HTTP 200 does not prove an email was sent
+
+Always confirm in the Resend log:
+
+```bash
+curl -H "Authorization: Bearer $RESEND_API_KEY" https://api.resend.com/emails?limit=5
+```
+
+`GET /emails/{id}` returns the delivered `html`, which is the authoritative way to check what
+actually went out. Look for `last_event: delivered`.
+
+Gmail's **search index lags by minutes**, so a fresh send can be `delivered` in Resend and still
+not be findable by searching Gmail. Trust Resend.
+
+### Sending test email safely
+
+1. Put `AUDIT TEST - please ignore` in the **name** field — it flows into the subject line of both
+   the contact and sign-terms emails.
+2. To keep the owner's real inbox clean, point `NEXT_PUBLIC_CONTACT_EMAIL` at a test address **and
+   rebuild** (it is inlined at build time), then restore `.env.local` afterwards.
+3. Respect the rate limits — contact 5/min, sign-terms 3/min — or you will get 429s and misread
+   them as failures.
+
+### If you change the sending domain
+
+The sender address appears in **three** `resend.emails.send()` calls across two files:
+`src/app/api/contact/route.ts` (owner + customer) and `src/app/api/sign-terms/route.ts`
+(owner + signer). Update all three, and verify the new domain in the Resend dashboard first —
+until it is verified, Resend will only send from `onboarding@resend.dev`.
+
+---
+
+## Testing a release
+
+**Enquiry form** — submit at `/#contact-form`, then confirm two `delivered` events in Resend: the
+owner notification and the customer confirmation.
+
+**Signed terms** — at `/terms`, sign and submit, then confirm two `delivered` events: the owner copy
+and the signer's copy, both carrying `Signed_Terms.pdf`.
+
+**Pool Villa validation** — select Pool Villa, confirm more than 3 adults is blocked and the
+children field disables at 3 adults.
+
+**Sitemap** — every URL in it must return 200:
+
+```bash
+for u in $(curl -sS https://theluxuryhouse.uk/sitemap.xml | sed -n 's:.*<loc>\(.*\)</loc>.*:\1:p'); do
+  printf "%s %s\n" "$(curl -sS -o /dev/null -w '%{http_code}' "$u")" "$u"
+done
+```
+
+A URL in the sitemap that 404s is an SEO bug — this is exactly how `/booking` was caught.
+
+> Note: the `/terms` submit handler calls `alert()` on failure, which freezes browser automation
+> tooling. Override `window.alert` before driving that form programmatically.
 
 ---
 
 ## Troubleshooting
 
-### Email Not Sending:
-- Check RESEND_API_KEY is correct in Netlify environment variables
-- Verify domain in Resend dashboard
-- Check Netlify function logs: **Site settings** → **Functions** → **View logs**
+**Email not sending** — check `RESEND_API_KEY` in Vercel, confirm the domain is still verified in
+Resend, then read the function logs (Vercel → project → Logs). Check the Resend log for a
+`bounced` or `complained` event rather than assuming the code failed.
 
-### Build Fails:
-- Check build logs in Netlify
-- Verify all environment variables are set
-- Make sure NODE_VERSION is set to 18
+**A script, font, image or API call silently does nothing** — suspect the CSP first. Open the
+browser console and look for `Refused to load…`. Widen the relevant directive in `next.config.ts`.
 
-### Images Not Loading:
-- Images are in the repository, so they should work
-- Check browser console for 404 errors
-- Verify image paths in `src/lib/images.ts`
+**Build fails** — read the Vercel build log. Note that type and lint errors are *ignored* during
+builds, so a build failure is usually a genuine runtime or import problem.
 
-### 404 on Pages:
-- Next.js is configured for Netlify automatically
-- If issues persist, add `netlify.toml`:
+**TLS certificate not issued after a DNS change** — Vercel did not auto-issue during the migration.
+Force it:
 
-```toml
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+```bash
+npx vercel certs issue theluxuryhouse.uk www.theluxuryhouse.uk
 ```
+
+It completed in about 13 seconds.
+
+**Turbopack crashes with "Symlink node_modules is invalid, it points out of the filesystem root"** —
+a `node_modules` symlink into a git worktree. Copy the directory or run `npm ci` instead.
 
 ---
 
-## Monitoring & Analytics
+## Rollback
 
-### Add Google Analytics (Optional):
+**Fastest:** Vercel dashboard → Deployments → pick the previous good build → Promote to Production.
 
-1. Get your GA4 Measurement ID
-2. Add to Netlify environment variables:
+**Back to Netlify** (available until the old site is deleted, planned after ~2026-09-19) — change
+DNS at Namecheap:
+
 ```
-NEXT_PUBLIC_GA_MEASUREMENT_ID = G-XXXXXXXXXX
+A      @     75.2.60.5
+CNAME  www   the-luxury-house-website.netlify.app
 ```
-3. Redeploy the site
 
-### Netlify Analytics:
-
-- Go to **Analytics** in Netlify dashboard
-- Enable Netlify Analytics ($9/month, optional)
-- Get server-side analytics without JavaScript
+Netlify site `the-luxury-house-website`, project id `e2d6817d-2713-4fa3-985b-f2649d5004ba`.
 
 ---
 
 ## Maintenance
 
-### Update Content:
+**Content** — edit, commit, push. Vercel deploys automatically.
 
-1. Edit files locally
-2. Commit and push:
-```bash
-git add .
-git commit -m "Update content"
-git push
-```
-3. Netlify auto-deploys in ~2 minutes
+**Blog posts** — edit `src/lib/blog/blogData.ts`, add images under `public/images/blog/`.
+New posts are picked up by `src/app/sitemap.ts` automatically.
 
-### Add Blog Posts:
+**Pricing** — edit `src/components/layout/ReserveStaySection.tsx`, test with `npm run dev`.
 
-1. Edit `src/lib/blog/blogData.ts`
-2. Add images to `public/images/blog/`
-3. Commit and push
-
-### Update Pricing:
-
-1. Edit pricing logic in `src/components/layout/ReserveStaySection.tsx`
-2. Test locally with `npm run dev`
-3. Commit and push when satisfied
+**Adding a page** — if it should be indexed, add it to `src/app/sitemap.ts`. If it should not be,
+leave it out. Never add a sitemap entry for a route that does not exist.
 
 ---
 
-## Support
-
-If you encounter issues:
-
-1. **Check Netlify Deploy Logs**: Shows build errors
-2. **Check Netlify Function Logs**: Shows runtime errors (email, API calls)
-3. **Browser Console**: Shows client-side errors
-4. **Resend Logs**: Shows email delivery status
-
----
-
-## Cost Breakdown
+## Cost
 
 | Service | Plan | Cost |
-|---------|------|------|
-| Netlify Hosting | Free | $0/month |
-| Resend Email | Free (100/day) | $0/month |
-| Custom Domain | Varies by registrar | ~$12/year |
+|---|---|---|
+| Vercel hosting | Hobby | $0/month |
+| Resend email | Free (100/day) | $0/month |
+| Domain | Namecheap | ~$12/year |
 | **Total** | | **~$1/month** |
 
-Upgrade options:
-- Netlify Pro ($19/month): Analytics, forms, better performance
-- Resend Pro ($20/month): 50,000 emails/month
-
 ---
 
-## Next Steps After Deployment
+## Monitoring
 
-1. ✅ Test all functionality
-2. ✅ Set up Google Analytics (optional)
-3. ✅ Submit sitemap to Google Search Console: `https://your-domain.com/sitemap.xml`
-4. ✅ Monitor emails in Resend dashboard
-5. ✅ Update social media profiles with live URL
-6. ✅ Create robots.txt rules if needed
+- **Vercel** → Logs for runtime errors, Deployments for build history
+- **Resend** → delivery status, bounces, complaints
+- **Google Search Console** → sitemap at `https://theluxuryhouse.uk/sitemap.xml`
+- **Browser console** → client-side errors and CSP violations
 
----
-
-**Website deployed! 🎉**
-
-Your live URL: https://YOUR_SITE.netlify.app
-(or https://www.theluxuryhouse.uk after domain setup)
+Google Analytics is wired up but **not configured in production** — `NEXT_PUBLIC_GA_MEASUREMENT_ID`
+is unset, so GA does not currently run. Setting it in Vercel and redeploying is all that is needed;
+the CSP already allows `googletagmanager.com` and `google-analytics.com`.
