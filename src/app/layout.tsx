@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Merriweather } from "next/font/google";
+import { Inter, Playfair_Display, Merriweather, Cormorant_Garamond } from "next/font/google";
 import StructuredData from "@/components/SEO/StructuredData";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
@@ -14,6 +14,14 @@ const inter = Inter({
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  display: 'swap',
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
   display: 'swap',
 });
 
@@ -81,7 +89,7 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} ${merriweather.variable} font-sans antialiased`}
+        className={`${inter.variable} ${playfair.variable} ${merriweather.variable} ${cormorant.variable} font-sans antialiased`}
       >
         {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />

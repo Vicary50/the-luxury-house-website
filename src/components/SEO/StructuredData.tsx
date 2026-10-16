@@ -22,7 +22,6 @@ export default function StructuredData() {
       "latitude": "53.7676",
       "longitude": "-0.3274"
     },
-    "telephone": "+44 7123 456789",
     "email": "theluxuryhouseuk@gmail.com",
     "priceRange": "£££",
     "amenityFeature": [
@@ -50,56 +49,6 @@ export default function StructuredData() {
         "@type": "LocationFeatureSpecification",
         "name": "Kitchen",
         "value": true
-      }
-    ],
-    "starRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "127"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Newton Family"
-        },
-        "reviewBody": "Thank you. The whole of the Newton family, from 5 months to 75 years old had a wonderful stay in your lovely house.",
-        "datePublished": "2025-08-22"
-      },
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Merrick"
-        },
-        "reviewBody": "Thank you for having us in your lovely home to celebrate our hens! We can't wait to stay again!",
-        "datePublished": "2025-08-24"
-      },
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Family Guest"
-        },
-        "reviewBody": "What a great find! Such a hidden gem, lovely and spacious, just what we needed as a family. The boys enjoyed splashing around and using the pool. Highly recommended",
-        "datePublished": "2024-05-19"
       }
     ],
     "offers": {

@@ -15,9 +15,9 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <TestimonialsSlider />
         <LuxurySection />
         <FeaturesSection />
+        <TestimonialsSlider />
         <AccommodationSection />
         <MasonryGallery />
         <ReserveStaySection />

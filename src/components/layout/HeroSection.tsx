@@ -1,110 +1,89 @@
-'use client';
+import Image from 'next/image';
 
-import { motion } from 'framer-motion';
-import OptimizedImage from '@/components/ui/OptimizedImage';
-import { usePathname } from 'next/navigation';
+// Video slot: set when the hero film arrives (muted loop, portrait source cropped to landscape).
+// The photo stays as the poster and as the reduced-motion fallback.
+const HERO_VIDEO: { mp4: string; webm: string } | null = null;
+const HERO_PHOTO = '/images/Swimming%20pool/Swimming%20pool%206.jpg';
+
+const FACTS = [
+  'Sleeps up to 14',
+  'Heated outdoor pool',
+  'Poolside villa',
+  'Firepit terrace',
+  'East Yorkshire',
+];
 
 export default function HeroSection() {
-  const pathname = usePathname();
-
-  const handleBookNowClick = () => {
-    // If we're on the homepage, smooth scroll to contact form
-    if (pathname === '/') {
-      const contactForm = document.getElementById('contact-form');
-      if (contactForm) {
-        contactForm.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      // If on another page, navigate to homepage contact form
-      window.location.href = '/#contact-form';
-    }
-  };
-
   return (
-    <section id="home" className="relative h-[70vh] flex items-center">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <OptimizedImage
-          src="/images/Hero/Hero%20photo.jpg"
-          alt="The Luxury House - Premium holiday rental in East Yorkshire with private pool and elegant architecture"
-          width={1920}
-          height={1080}
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>
+    <>
+      <section id="home" className="relative isolate flex min-h-[640px] h-[calc(100svh-4rem)] items-end overflow-hidden bg-ink">
+        <div className="hero-settle absolute inset-0 -z-10">
+          {HERO_VIDEO ? (
+            <video
+              className="h-full w-full object-cover motion-reduce:hidden"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={HERO_PHOTO}
+              aria-hidden="true"
+            >
+              <source src={HERO_VIDEO.webm} type="video/webm" />
+              <source src={HERO_VIDEO.mp4} type="video/mp4" />
+            </video>
+          ) : null}
+          <Image
+            src={HERO_PHOTO}
+            alt="The heated outdoor pool at The Luxury House, with the poolside villa and lounge terrace beyond"
+            fill
+            priority
+            sizes="100vw"
+            className={`object-cover ${HERO_VIDEO ? 'hidden motion-reduce:block' : ''}`}
+          />
+        </div>
+        {/* Scrim only behind the text block, so the photo stays clean above it */}
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-full bg-gradient-to-t from-black/80 via-black/45 via-45% to-black/0 sm:h-3/4" />
 
-      {/* Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center h-full py-12">
-          {/* Left Side - Text Content */}
-          <motion.div 
-            className="text-left"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+        <div className="mx-auto w-full max-w-7xl px-5 pb-14 sm:px-8 sm:pb-20 lg:pb-24">
+          <h1 className="rise-in font-display text-[clamp(3.25rem,9vw,7.5rem)] font-light leading-[0.95] tracking-[-0.01em] text-white">
+            The Luxury House
+          </h1>
+          <p
+            className="rise-in mt-5 max-w-xl font-display text-[clamp(1.5rem,3vw,2.25rem)] font-light italic leading-snug text-white/90"
+            style={{ animationDelay: '180ms' }}
           >
-            <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-6xl merriweather-light text-white mb-6 leading-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+            Room for fourteen, a heated pool, and a fire to end the day.
+          </p>
+          <div className="rise-in mt-10 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: '360ms' }}>
+            <a
+              href="#contact-form"
+              className="inline-flex min-h-12 items-center justify-center rounded-[2px] bg-white px-8 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:bg-stone"
             >
-              The Luxury House
-            </motion.h1>
-            
-            <motion.h2 
-              className="text-xl sm:text-2xl lg:text-3xl font-light text-white/90 mb-8 leading-relaxed max-w-2xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              Enquire about dates
+            </a>
+            <a
+              href="#gallery"
+              className="inline-flex min-h-12 items-center justify-center rounded-[2px] border border-white/60 px-8 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
             >
-              Experience comfort and luxury in every corner of our carefully curated home
-            </motion.h2>
-
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <button
-                onClick={handleBookNowClick}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              >
-                Book Now
-              </button>
-              <button
-                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                View Gallery
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Side - Available for additional content or kept empty for balance */}
-          <div className="hidden lg:block">
-            {/* This space can be used for additional elements if needed */}
+              View the gallery
+            </a>
           </div>
         </div>
+      </section>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-        >
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
-          </div>
-        </motion.div>
+      <div className="border-b border-hairline bg-paper">
+        {/* gap-px over a hairline background draws the dividers at every breakpoint */}
+        <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-hairline md:grid-cols-5">
+          {FACTS.map((fact) => (
+            <li
+              key={fact}
+              className="bg-paper px-3 py-5 text-center font-display text-lg text-ink last:col-span-2 md:text-xl md:last:col-span-1"
+            >
+              {fact}
+            </li>
+          ))}
+        </ul>
       </div>
-    </section>
+    </>
   );
 }

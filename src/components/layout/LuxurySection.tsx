@@ -1,69 +1,45 @@
-'use client';
+import Image from 'next/image';
 
-import { motion } from 'framer-motion';
-import OptimizedImage from '@/components/ui/OptimizedImage';
-
+// Editorial spread: photo bleeds to the left edge, text sits in the right-hand columns.
 export default function LuxurySection() {
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Text Content */}
-          <motion.div
-            className="lg:col-span-1"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Where Luxury Meets
-              <br />
-              <span className="text-amber-700">Tranquility</span>
+    <section id="about" className="bg-stone">
+      <div className="grid lg:grid-cols-12">
+        <div className="relative aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:min-h-[44rem]">
+          <Image
+            src="/images/Swimming%20pool/Swimming%20pool%201.jpg"
+            alt="The heated pool beside the house, with sun loungers on the terrace and the lawn beyond"
+            fill
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="object-cover"
+          />
+        </div>
+
+        <div className="flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:col-span-5 lg:px-16 xl:px-24">
+          <div className="max-w-md">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-olive">The pool and villa</p>
+            <h2 className="mt-5 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
+              Warm water,
+              <em className="block font-light">whatever the weather.</em>
             </h2>
-            
-            <p className="text-lg text-gray-600 leading-relaxed mb-6">
-              Step into a home where every detail has been carefully curated to provide you 
-              unparalleled comfort and sophistication. The Luxury House offers the perfect sanctuary 
-              for those seeking to escape the ordinary and embrace the extraordinary.
-            </p>
-            
-            <p className="text-lg text-gray-600 leading-relaxed mb-6">
-              Whether you&apos;re planning a family gathering, a reunion with friends, or a special 
-              celebration like a hen party or Eid, The Luxury House provides the perfect 
-              backdrop for creating lasting memories. Our attention to detail ensures that 
-              every aspect of your stay exceeds expectations.
-            </p>
-
-            <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              By booking directly with us, you&apos;ll not only secure the best rates but also 
-              receive personalized service tailored to your specific needs. We&apos;re committed 
-              to making your stay as comfortable and enjoyable as possible.
-            </p>
-          </motion.div>
-
-          {/* Right Column - Image */}
-          <motion.div
-            className="lg:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden shadow-2xl">
-              <OptimizedImage
-                src="/images/Sitting%20room/Sitting%20room%201.jpg"
-                alt="Elegant sitting room at The Luxury House with luxury furnishings, warm ambiance and sophisticated interior design"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            <div className="mt-8 space-y-5 text-[1.0625rem] leading-[1.75] text-muted">
+              <p>
+                The outdoor pool is heated, so a Yorkshire spring or autumn is no reason to stay dry.
+                Loungers line the terrace, and the lawn gives the children room to run between swims.
+              </p>
+              <p>
+                Across the terrace, the poolside villa has its own kitchen, lounge, dining table and
+                shower. It is where long lunches happen, and where everyone dries off without
+                trailing water through the house.
+              </p>
             </div>
-            
-            {/* Floating accent */}
-            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-100 rounded-full opacity-60"></div>
-            <div className="absolute -top-6 -left-6 w-16 h-16 bg-amber-200 rounded-full opacity-40"></div>
-          </motion.div>
+            <a
+              href="#contact-form"
+              className="mt-10 inline-flex min-h-12 items-center border-b border-ink pb-1 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:border-olive hover:text-olive"
+            >
+              Enquire about dates
+            </a>
+          </div>
         </div>
       </div>
     </section>

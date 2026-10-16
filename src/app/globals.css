@@ -21,6 +21,21 @@
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
   --font-merriweather: var(--font-merriweather);
+  --font-display: var(--font-cormorant), Georgia, serif;
+}
+
+/* Redesign tokens (editorial luxury). Old :root tokens above stay until every page is restyled. */
+@theme {
+  --color-ink: #1c1c1a;
+  --color-ink-soft: #3a3936;
+  --color-muted: #5e5b54;   /* 6.6:1 on white, 5.6:1 on stone */
+  --color-stone: #efebe4;
+  --color-paper: #ffffff;
+  --color-hairline: #d9d3c7;
+  --color-olive: #4b5234;   /* single accent, 8.4:1 on white */
+  --color-olive-deep: #3a4028;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body {
@@ -48,11 +63,25 @@ body {
   background: #92400e;
 }
 
-/* Smooth transitions */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* Hero load sequence: the page's one orchestrated motion moment. */
+@keyframes hero-settle {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-settle { animation: hero-settle 2.4s var(--ease-editorial) both; }
+.rise-in { animation: rise-in 1s var(--ease-editorial) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-settle, .rise-in { animation: none; }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-olive);
+  outline-offset: 3px;
 }
 
 /* Typography classes */
