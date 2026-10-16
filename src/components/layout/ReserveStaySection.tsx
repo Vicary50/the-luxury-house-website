@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Mail, MapPin } from 'lucide-react';
+
+const labelClass = 'mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-ink-soft';
+const fieldClass = 'w-full rounded-[2px] border border-hairline bg-paper px-4 py-3 text-ink placeholder:text-muted/70 focus:border-olive focus:outline-none focus:ring-1 focus:ring-olive';
 
 interface ContactFormData {
   name: string;
@@ -132,7 +134,7 @@ export default function ReserveStaySection() {
 
         // Show success message and reset form
         setTimeout(() => {
-          alert('Thank you for your inquiry! We will get back to you soon.');
+          alert('Thank you for your enquiry! We will get back to you soon.');
           // Reset form after delay
           setFormData({
             name: '',
@@ -148,13 +150,13 @@ export default function ReserveStaySection() {
           setAvailabilityStatus(null);
         }, 3000); // Show availability status for 3 seconds
       } else {
-        alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
+        alert('There was an error sending your enquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
         setAvailabilityStatus(null);
       }
 
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was an error sending your inquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
+      alert('There was an error sending your enquiry. Please try again or contact us directly at theluxuryhouseuk@gmail.com');
       setAvailabilityStatus(null);
     } finally {
       setIsSubmitting(false);
@@ -162,75 +164,84 @@ export default function ReserveStaySection() {
   };
 
   return (
-    <section id="contact-form" className="py-20 bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div 
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
-            Contact Us
+    <section id="contact-form" className="bg-stone py-24 sm:py-32">
+      <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <p data-reveal className="text-xs font-medium uppercase tracking-[0.2em] text-olive">Enquire</p>
+          <h2 data-reveal className="mt-5 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
+            Tell us
+            <em className="block font-light">your dates.</em>
           </h2>
-          {/* Amber accent line */}
-          <div className="w-16 h-1 bg-amber-600 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Get in touch with us about your stay at The Luxury House and see an instant price estimate
+          <p className="mt-8 max-w-sm text-[1.0625rem] leading-[1.75] text-muted">
+            Choose your dates and group size to see an estimate, then send the enquiry. We will be in touch to confirm availability.
           </p>
-        </motion.div>
 
-        {/* Contact Form */}
-        <motion.div
-          className="max-w-4xl mx-auto mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl">
+          <dl className="mt-10 space-y-6 border-t border-hairline pt-8">
+            <div className="flex gap-4">
+              <Mail className="mt-0.5 h-5 w-5 shrink-0 text-olive" strokeWidth={1.25} aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Email</dt>
+                <dd className="mt-1">
+                  <a href="mailto:theluxuryhouseuk@gmail.com" className="break-all text-ink underline underline-offset-4 transition-colors duration-300 hover:text-olive">
+                    theluxuryhouseuk@gmail.com
+                  </a>
+                </dd>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-olive" strokeWidth={1.25} aria-hidden="true" />
+              <div>
+                <dt className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Location</dt>
+                <dd className="mt-1 text-ink">East Yorkshire, United Kingdom</dd>
+              </div>
+            </div>
+          </dl>
+        </div>
+
+        <div className="border border-hairline bg-paper p-6 sm:p-10 lg:col-span-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Contact Information */}
               <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Full Name <span className="text-red-500">*</span>
+              <label htmlFor="enquiry-name" className={labelClass}>
+                Full name <span className="text-olive">*</span>
               </label>
               <input
+                id="enquiry-name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="Enter your full name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className={fieldClass}
                 required
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Email Address <span className="text-red-500">*</span>
+                <label htmlFor="enquiry-email" className={labelClass}>
+                  Email address <span className="text-olive">*</span>
                 </label>
                 <input
+                  id="enquiry-email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className={fieldClass}
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Telephone Number <span className="text-red-500">*</span>
+                <label htmlFor="enquiry-telephone" className={labelClass}>
+                  Telephone number <span className="text-olive">*</span>
                 </label>
                 <input
+                  id="enquiry-telephone"
                   type="tel"
                   value={formData.telephone}
                   onChange={(e) => handleInputChange('telephone', e.target.value)}
                   placeholder="+44 7700 900000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className={fieldClass}
                   required
                 />
               </div>
@@ -238,14 +249,15 @@ export default function ReserveStaySection() {
 
             {/* Accommodation Type Selection */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Accommodation Type <span className="text-red-500">*</span>
+              <label htmlFor="enquiry-accommodation" className={labelClass}>
+                Accommodation type <span className="text-olive">*</span>
               </label>
               <select
+                id="enquiry-accommodation"
                 name="accommodationType"
                 value={formData.accommodationType}
                 onChange={(e) => handleInputChange('accommodationType', e.target.value as 'entire-property' | 'poolhouse')}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className={fieldClass}
                 required
               >
                 <option value="entire-property">The Luxury House - Main House, Pool Villa, Heated Swimming Pool</option>
@@ -256,36 +268,40 @@ export default function ReserveStaySection() {
             {/* Date Fields */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Check In Date <span className="text-red-500">*</span>
+                <label htmlFor="enquiry-check-in" className={labelClass}>
+                  Check-in date <span className="text-olive">*</span>
                 </label>
                 <DatePicker
+                  id="enquiry-check-in"
                   selected={formData.checkInDate}
                   onChange={(date) => handleInputChange('checkInDate', date)}
                   minDate={tomorrow}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={fieldClass}
+                  wrapperClassName="block w-full"
                   placeholderText="Select check-in date"
                   dateFormat="MMMM d, yyyy"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Check Out Date <span className="text-red-500">*</span>
+                <label htmlFor="enquiry-check-out" className={labelClass}>
+                  Check-out date <span className="text-olive">*</span>
                 </label>
                 <DatePicker
+                  id="enquiry-check-out"
                   selected={formData.checkOutDate}
                   onChange={(date) => handleInputChange('checkOutDate', date)}
                   minDate={formData.checkInDate ? new Date(formData.checkInDate.getTime() + 2 * 24 * 60 * 60 * 1000) : tomorrow}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={fieldClass}
+                  wrapperClassName="block w-full"
                   placeholderText="Select check-out date (min 2 nights)"
                   dateFormat="MMMM d, yyyy"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Number of Nights
-                </label>
-                <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-semibold flex items-center justify-center">
+                <p className={labelClass}>
+                  Number of nights
+                </p>
+                <div className="flex w-full items-center justify-center rounded-[2px] border border-hairline bg-stone px-4 py-3 font-display text-xl text-ink">
                   {formData.checkInDate && formData.checkOutDate
                     ? Math.ceil((formData.checkOutDate.getTime() - formData.checkInDate.getTime()) / (1000 * 60 * 60 * 24))
                     : '-'}
@@ -296,10 +312,11 @@ export default function ReserveStaySection() {
             {/* Guest Count Fields */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Number of Adults <span className="text-red-500">*</span>
+                <label htmlFor="enquiry-adults" className={labelClass}>
+                  Adults <span className="text-olive">*</span>
                 </label>
                 <input
+                  id="enquiry-adults"
                   type="number"
                   min="1"
                   max={formData.accommodationType === 'poolhouse' ? 3 : undefined}
@@ -312,15 +329,16 @@ export default function ReserveStaySection() {
                     }
                     handleInputChange('numberOfAdults', value);
                   }}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className={fieldClass}
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label htmlFor="enquiry-children" className={labelClass}>
                   Children (2-12 years)
                 </label>
                 <input
+                  id="enquiry-children"
                   type="number"
                   min="0"
                   max={formData.accommodationType === 'poolhouse' ? Math.max(0, 3 - formData.numberOfAdults) : undefined}
@@ -334,24 +352,21 @@ export default function ReserveStaySection() {
                     handleInputChange('numberOfChildren', value);
                   }}
                   disabled={formData.accommodationType === 'poolhouse' && formData.numberOfAdults >= 3}
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent ${
-                    formData.accommodationType === 'poolhouse' && formData.numberOfAdults >= 3
-                      ? 'bg-gray-200 cursor-not-allowed'
-                      : ''
-                  }`}
+                  className={`${fieldClass} disabled:cursor-not-allowed disabled:bg-stone disabled:text-muted`}
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Infants (Under 2)
+                <label htmlFor="enquiry-infants" className={labelClass}>
+                  Infants (under 2)
                 </label>
                 <input
+                  id="enquiry-infants"
                   type="number"
                   min="0"
                   max="2"
                   value={formData.numberOfInfants}
                   onChange={(e) => handleInputChange('numberOfInfants', parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className={fieldClass}
                 />
               </div>
             </div>
@@ -362,44 +377,40 @@ export default function ReserveStaySection() {
               const totalGuests = formData.numberOfAdults + formData.numberOfChildren + formData.numberOfInfants;
 
               return (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-amber-50 border-2 border-amber-200 rounded-lg p-6"
-                >
+                <div className="border border-hairline bg-stone/60 p-6 sm:p-8" aria-live="polite">
                   {/* Top Section - Total Cost */}
-                  <div className="text-center mb-4 pb-4 border-b-2 border-amber-200">
-                    <p className="text-gray-600 text-sm mb-1">Estimated Total Cost</p>
-                    <p className="text-4xl font-bold text-amber-700 mb-2">
+                  <div className="mb-5 border-b border-hairline pb-5 text-center">
+                    <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Estimated total cost</p>
+                    <p className="mt-2 font-display text-5xl font-light text-ink">
                       £{breakdown.totalCost.toLocaleString()}
                     </p>
-                    <p className="text-gray-600 text-sm">
+                    <p className="mt-2 text-sm text-muted">
                       {breakdown.nights} nights • {totalGuests} guests
                     </p>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-sm text-muted">
                       £{Math.round(breakdown.perNightCost).toLocaleString()} per night
                     </p>
                   </div>
 
                   {/* Bottom Section - Calculation Details */}
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-3">Calculation Details:</h4>
+                  <div className="text-sm tabular-nums">
+                    <h4 className="mb-3 font-medium text-ink">Calculation details</h4>
 
                     {/* Adults */}
                     <div className="mb-3">
-                      <p className="text-sm text-gray-700 mb-1">
+                      <p className="mb-1 text-ink-soft">
                         Adults {breakdown.adultsEntered < (formData.accommodationType === 'entire-property' ? 10 : 2)
                           ? `(${breakdown.adultsEntered} entered, min ${breakdown.adultsCharged} charged)`
                           : `(${breakdown.adultsCharged})`}
                       </p>
-                      <p className="text-sm text-gray-600 font-mono">
+                      <p className="text-muted">
                         {breakdown.adultsCharged} adults × £{formData.accommodationType === 'entire-property' ? '120' : '115'}/night × {breakdown.nights} {breakdown.nights === 1 ? 'night' : 'nights'} = £{breakdown.adultsCost.toLocaleString()}
                       </p>
                     </div>
 
                     {/* Children */}
                     <div className="mb-3">
-                      <p className="text-sm text-gray-700 mb-1">
+                      <p className="mb-1 text-ink-soft">
                         Children {formData.accommodationType === 'entire-property' && breakdown.childrenEntered > 0 && breakdown.childrenCharged === 0
                           ? `(${breakdown.childrenEntered > 1 ? 'first free' : 'free'}, ${breakdown.childrenCharged} charged)`
                           : breakdown.childrenEntered > breakdown.childrenCharged && formData.accommodationType === 'entire-property'
@@ -408,7 +419,7 @@ export default function ReserveStaySection() {
                           ? `(${breakdown.childrenCharged} charged)`
                           : '(0)'}
                       </p>
-                      <p className="text-sm text-gray-600 font-mono">
+                      <p className="text-muted">
                         {breakdown.childrenCharged > 0
                           ? `${breakdown.childrenCharged} child${breakdown.childrenCharged > 1 ? 'ren' : ''} × £${formData.accommodationType === 'entire-property' ? '50' : '115'}/night × ${breakdown.nights} ${breakdown.nights === 1 ? 'night' : 'nights'} = £${breakdown.childrenCost.toLocaleString()}`
                           : 'Free = £0'}
@@ -417,92 +428,52 @@ export default function ReserveStaySection() {
 
                     {/* Infants */}
                     <div className="mb-3">
-                      <p className="text-sm text-gray-700 mb-1">
+                      <p className="mb-1 text-ink-soft">
                         Infants ({breakdown.infantsEntered})
                       </p>
-                      <p className="text-sm text-gray-600 font-mono">
+                      <p className="text-muted">
                         Free = £0
                       </p>
                     </div>
 
                     {/* Total */}
-                    <div className="pt-3 border-t-2 border-amber-300">
-                      <p className="text-sm font-semibold text-gray-800 font-mono">
+                    <div className="border-t border-hairline pt-3">
+                      <p className="font-medium text-ink">
                         Total = £{breakdown.totalCost.toLocaleString()}
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })()}
 
             {/* Submit Button */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 ${
-                  availabilityStatus === 'available' 
-                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                className={`min-h-14 w-full rounded-[2px] px-6 text-sm font-medium tracking-wide text-white transition-colors duration-300 ${
+                  availabilityStatus === 'available'
+                    ? 'bg-olive-deep'
                     : availabilityStatus === 'unavailable'
-                    ? 'bg-red-600 hover:bg-red-700 text-white'
+                    ? 'bg-ink'
                     : isSubmitting || availabilityStatus === 'checking'
-                    ? 'bg-blue-600 text-white cursor-not-allowed'
-                    : 'bg-amber-600 hover:bg-amber-700 text-white'
+                    ? 'cursor-not-allowed bg-ink-soft'
+                    : 'bg-olive hover:bg-olive-deep'
                 }`}
               >
                 {availabilityStatus === 'checking' || isSubmitting
                   ? 'Sending message...'
                   : availabilityStatus === 'available'
-                  ? 'Success - Inquiry Sent!'
+                  ? 'Enquiry sent'
                   : availabilityStatus === 'unavailable'
-                  ? 'Unavailable - But Inquiry Sent'
-                  : 'Send Inquiry'
+                  ? 'Unavailable, but enquiry sent'
+                  : 'Send enquiry'
                 }
               </button>
             </div>
           </form>
         </div>
-      </motion.div>
-
-      {/* Contact Information */}
-      <motion.div
-          className="max-w-4xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-8 text-center">Get in Touch</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="bg-amber-100 p-4 rounded-full mb-4">
-                  <Mail size={28} className="text-amber-600" />
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Email</h4>
-                <a
-                  href="mailto:theluxuryhouseuk@gmail.com"
-                  className="text-gray-600 hover:text-amber-600 transition-colors duration-200 underline"
-                >
-                  theluxuryhouseuk@gmail.com
-                </a>
-              </div>
-
-              <div className="flex flex-col items-center text-center">
-                <div className="bg-amber-100 p-4 rounded-full mb-4">
-                  <MapPin size={28} className="text-amber-600" />
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Location</h4>
-                <p className="text-gray-600">
-                  Beautiful East Yorkshire<br />
-                  United Kingdom
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

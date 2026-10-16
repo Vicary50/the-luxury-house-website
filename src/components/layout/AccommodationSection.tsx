@@ -78,11 +78,11 @@ export default function AccommodationSection() {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="bg-paper py-24 sm:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <motion.h2
-            className="text-3xl md:text-4xl font-light text-gray-900 mb-4"
+            className="mb-4 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -91,7 +91,7 @@ export default function AccommodationSection() {
             Choose Your Accommodation
           </motion.h2>
           <motion.p
-            className="text-lg text-gray-600 max-w-2xl mx-auto"
+            className="mx-auto max-w-2xl text-[1.0625rem] leading-[1.75] text-muted"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -106,14 +106,14 @@ export default function AccommodationSection() {
             <motion.div
               key={option.type}
               onClick={() => handleCardClick(option.type)}
-              className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-300 hover:shadow-md transition-all duration-300 cursor-pointer"
+              className="relative cursor-pointer overflow-hidden border border-hairline bg-paper transition-colors duration-300 hover:border-olive"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
               {/* Image Gallery */}
-              <div className="relative h-48 bg-gray-100">
+              <div className="relative h-48 bg-stone">
                 <div className="grid grid-cols-3 h-full gap-1">
                   {option.images.map((image, imgIndex) => (
                     <div key={imgIndex} className="relative">
@@ -133,28 +133,28 @@ export default function AccommodationSection() {
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="mb-2 font-display text-2xl font-normal leading-tight text-ink">
                       {option.title}
                     </h3>
-                    <p className="text-gray-600 mb-2">{option.description}</p>
-                    <p className="text-sm text-amber-600 font-medium">
+                    <p className="mb-2 text-muted">{option.description}</p>
+                    <p className="text-sm font-medium text-olive">
                       {option.highlights}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-500">From</div>
-                    <div className="text-2xl font-bold text-gray-900">{option.priceFrom}</div>
-                    <div className="text-sm text-gray-500">{option.priceUnit}</div>
+                    <div className="text-sm text-muted">From</div>
+                    <div className="font-display text-3xl text-ink">{option.priceFrom}</div>
+                    <div className="text-sm text-muted">{option.priceUnit}</div>
                   </div>
                 </div>
 
                 {/* Features */}
                 <div className="space-y-2">
-                  <h4 className="font-medium text-gray-900 mb-3">What&apos;s included:</h4>
+                  <h4 className="mb-3 font-medium text-ink">What&apos;s included:</h4>
                   <div className="grid grid-cols-1 gap-2">
                     {option.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center text-sm text-gray-600">
-                        <CheckIcon className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                      <div key={featureIndex} className="flex items-center text-sm text-muted">
+                        <CheckIcon className="w-4 h-4 text-olive mr-2 flex-shrink-0" />
                         {feature}
                       </div>
                     ))}

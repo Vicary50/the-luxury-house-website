@@ -9,6 +9,8 @@ const HERO_PHOTO = '/images/Swimming%20pool/Swimming%20pool%206.jpg';
 
 const FACTS = [
   'Sleeps up to 14',
+  '5 bedrooms',
+  '5 bathrooms',
   'Heated outdoor pool',
   'Poolside villa',
   'Firepit terrace',
@@ -74,12 +76,12 @@ export default function HeroSection() {
       </section>
 
       <div className="border-b border-hairline bg-paper">
-        {/* gap-px over a hairline background draws the dividers at every breakpoint */}
-        <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-hairline md:grid-cols-5">
+        {/* gap-px over a hairline background draws the dividers; the last fact spans the leftover cells so no grey gap shows */}
+        <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-hairline md:grid-cols-4 lg:grid-cols-7">
           {FACTS.map((fact) => (
             <li
               key={fact}
-              className="bg-paper px-3 py-5 text-center font-display text-lg text-ink last:col-span-2 md:text-xl md:last:col-span-1"
+              className="bg-paper px-3 py-4 text-center font-display text-lg text-ink last:col-span-2 sm:py-5 md:text-xl lg:last:col-span-1"
             >
               {fact}
             </li>

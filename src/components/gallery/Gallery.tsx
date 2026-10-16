@@ -25,7 +25,7 @@ export default function Gallery() {
     <section id="gallery" className="bg-paper pb-24 sm:pb-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col gap-6 border-t border-hairline pt-16 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
+          <h2 data-reveal className="font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
             Around the house
           </h2>
           <button

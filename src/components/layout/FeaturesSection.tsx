@@ -16,7 +16,7 @@ export default function FeaturesSection() {
     <section id="amenities" className="bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <h2 className="font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink lg:col-span-6">
+          <h2 data-reveal className="font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink lg:col-span-6">
             What the house has
           </h2>
           <p className="max-w-md text-[1.0625rem] leading-[1.75] text-muted lg:col-span-5 lg:col-start-8">

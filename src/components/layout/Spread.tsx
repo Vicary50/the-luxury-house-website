@@ -19,12 +19,12 @@ export default function Spread({ id, image, alt, eyebrow, title, titleItalic, pa
   return (
     <section id={id} className={tone === 'stone' ? 'bg-stone' : 'bg-paper'}>
       <div className="grid lg:grid-cols-12">
-        <div className={`relative aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:min-h-[44rem] ${flip ? 'lg:order-2' : ''}`}>
-          <Image src={image} alt={alt} fill sizes="(min-width: 1024px) 58vw, 100vw" className="object-cover" />
+        <div className={`relative aspect-[4/3] overflow-hidden lg:col-span-7 lg:aspect-auto lg:min-h-[44rem] ${flip ? 'lg:order-2' : ''}`}>
+          <Image src={image} alt={alt} fill sizes="(min-width: 1024px) 58vw, 100vw" data-reveal-image className="object-cover" />
         </div>
 
         <div className={`flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:col-span-5 lg:px-16 xl:px-24 ${flip ? 'lg:order-1' : ''}`}>
-          <div className="max-w-md">
+          <div data-reveal className="max-w-md">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-olive">{eyebrow}</p>
             <h2 className="mt-5 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
               {title}

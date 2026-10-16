@@ -6,7 +6,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'living-2',
     src: '/images/Living%20area/Living%20area%202.jpg',
-    alt: 'Comfortable living space with modern furnishings',
+    alt: 'Living area with a grey corner sofa, a wood-burning stove against a dark feature wall, and the kitchen beyond',
     category: 'Living area',
     featured: true,
     title: 'Living Room'
@@ -14,7 +14,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'living-4',
     src: '/images/Living%20area/Living%20area%204.jpg',
-    alt: 'Additional living space with elegant furnishings',
+    alt: 'Grey corner sofa facing the open-plan kitchen, with pendant lights over the counter',
     category: 'Living area',
     title: 'Secondary Living Space'
   },
@@ -23,7 +23,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'master-1',
     src: '/images/Master%20bedroom/Master%20bedroom%201.jpg',
-    alt: 'Elegant master bedroom with luxury bedding',
+    alt: 'Master bedroom with a grey buttoned bed, a cream throw and a window onto the garden',
     category: 'Master bedroom',
     featured: true,
     title: 'Master Bedroom'
@@ -31,28 +31,28 @@ export const havenImages: ImageData[] = [
   {
     id: 'master-2',
     src: '/images/Master%20bedroom/Master%20bedroom%202.jpg',
-    alt: 'Luxurious master bedroom with ensuite',
+    alt: 'Master bedroom with a tall silver mirror and the door open to the en suite',
     category: 'Master bedroom',
     title: 'Master Suite'
   },
   {
     id: 'master-ensuite-2',
     src: '/images/Master%20bedroom/Master%20bedroom%20ensuite%202.jpg',
-    alt: 'Spa-like master bathroom',
+    alt: 'Walk-in shower in the master en suite, with brown marble-effect tiles',
     category: 'Master bedroom',
     title: 'Ensuite Bathroom'
   },
   {
     id: 'master-ensuite-3',
     src: '/images/Master%20bedroom/Master%20bedroom%20ensuite%203.jpg',
-    alt: 'Premium bathroom fixtures',
+    alt: 'Master en suite with a freestanding bath and twin basins under a wide mirror',
     category: 'Master bedroom',
     title: 'Luxury Bathroom'
   },
   {
     id: 'master-ensuite-4',
     src: '/images/Master%20bedroom/Master%20bedroom%20ensuite%204.jpg',
-    alt: 'Modern ensuite with premium finishes',
+    alt: 'Freestanding bath in the master en suite, with a waterfall tap below the window',
     category: 'Master bedroom',
     title: 'Ensuite Details'
   },
@@ -61,7 +61,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'kingsize-1',
     src: '/images/Kingsize%20bedroom/Kingsize%20bedroom%201.jpg',
-    alt: 'Spacious kingsize bedroom with elegant decor',
+    alt: 'King-size bedroom with a white wooden bed, grey walls and a window onto trees',
     category: 'Kingsize bedroom',
     title: 'Kingsize Bedroom'
   },
@@ -70,14 +70,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'rear-king-1',
     src: '/images/Rear%20Kingsize%20bedroom/Rear%20Kingsize%20bedroom%201.jpg',
-    alt: 'Comfortable rear kingsize bedroom',
+    alt: 'Rear king-size bedroom with tree-pattern wallpaper and a window onto the garden',
     category: 'Rear Kingsize bedroom',
     title: 'Garden View Bedroom'
   },
   {
     id: 'rear-king-2',
     src: '/images/Rear%20Kingsize%20bedroom/Rear%20Kingsize%20bedroom%202.jpg',
-    alt: 'Rear kingsize bedroom with garden views',
+    alt: 'Rear king-size bedroom with a white wardrobe, folded towels on the chest of drawers and a dressing gown on the door',
     category: 'Rear Kingsize bedroom',
     title: 'Rear King Bedroom'
   },
@@ -86,7 +86,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'double-2',
     src: '/images/Double%20room/Double%20room%202.jpg',
-    alt: 'Comfortable double room',
+    alt: 'Double room with a cream buttoned headboard, script-pattern wallpaper and a brass side table',
     category: 'Double room',
     title: 'Guest Double Room'
   },
@@ -95,14 +95,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'bunk-1',
     src: '/images/Bunk%20bed%20room/Bunk%20bed%20room%201.jpg',
-    alt: 'Fun bunk bed room perfect for children',
+    alt: 'Bunk room with white bunk beds, a chest of drawers with heart handles and a window onto trees',
     category: 'Bunk bed room',
     title: 'Bunk Bed Room'
   },
   {
     id: 'bunk-2',
     src: '/images/Bunk%20bed%20room/Bunk%20bed%20room%202.jpg',
-    alt: 'Cozy bunk bed room',
+    alt: 'Bunk room with a white wardrobe and a chest of drawers with heart handles',
     category: 'Bunk bed room',
     title: 'Kids Bunk Room'
   },
@@ -111,21 +111,21 @@ export const havenImages: ImageData[] = [
   {
     id: 'children-1',
     src: "/images/Children's%20room/Children's%20room%201.jpg",
-    alt: 'Delightful children\'s room with twin beds',
+    alt: "Children's room with a single bed, star-pattern wallpaper and a star rug",
     category: 'Children\'s room',
     title: 'Children\'s Room'
   },
   {
     id: 'children-3',
     src: "/images/Children's%20room/Children's%20room%20%203.jpg",
-    alt: 'Colorful children\'s room',
+    alt: "Single bed in the children's room, beneath star-pattern wallpaper and a wall clock",
     category: 'Children\'s room',
     title: 'Twin Room'
   },
   {
     id: 'children-ensuite',
     src: "/images/Children's%20room/Children's%20room%20%20en%20suite.jpg",
-    alt: 'Children\'s room ensuite bathroom',
+    alt: "Children's room en suite with a black glass basin and a shower cubicle",
     category: 'Children\'s room',
     title: 'Kids Ensuite'
   },
@@ -134,7 +134,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'kitchen-1',
     src: '/images/Kitchen%20%26%20utility/Kitchen%201.jpg',
-    alt: 'Fully equipped modern kitchen',
+    alt: 'Kitchen with cream units, a wooden island, a range cooker and pendant lights',
     category: 'Kitchen',
     featured: true,
     title: 'Gourmet Kitchen'
@@ -142,7 +142,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'kitchen-3',
     src: '/images/Kitchen%20%26%20utility/Kitchen%203.jpg',
-    alt: 'Modern kitchen with premium appliances',
+    alt: 'Kitchen units with a wine fridge, and the dining area and garden doors beyond',
     category: 'Kitchen',
     title: 'Chef\'s Kitchen'
   },
@@ -151,7 +151,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'dining-1',
     src: '/images/Dining%20area/Dining%20area%201.jpg',
-    alt: 'Beautiful dining area perfect for family meals',
+    alt: 'Dining room with a long dark table, cream chairs and white orchids, looking out to the garden',
     category: 'Dining area',
     featured: true,
     title: 'Dining Area'
@@ -159,14 +159,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'dining-3',
     src: '/images/Dining%20area/Dining%20area%203.jpg',
-    alt: 'Spacious dining room',
+    alt: 'Dining table laid for dinner, seen from above, with the garden through the window',
     category: 'Dining area',
     title: 'Family Dining'
   },
   {
     id: 'dining-4',
     src: '/images/Dining%20area/Dining%20area%204.jpg',
-    alt: 'Modern dining space',
+    alt: 'Dining area under a high vaulted ceiling, with a glass chandelier and tall windows',
     category: 'Dining area',
     title: 'Contemporary Dining'
   },
@@ -175,14 +175,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'sitting-1',
     src: '/images/Sitting%20room/Sitting%20room%201.jpg',
-    alt: 'Elegant sitting room for relaxation',
+    alt: 'Sitting room with a wood-burning stove, a sunburst mirror and panelled grey wallpaper, lit by lamps',
     category: 'Sitting room',
     title: 'Sitting Room'
   },
   {
     id: 'sitting-2',
     src: '/images/Sitting%20room/Sitting%20room%202.jpg',
-    alt: 'Comfortable sitting area with fireplace',
+    alt: 'Sitting room with a cream sofa, a log basket by the stove and glazed oak doors',
     category: 'Sitting room',
     title: 'Relaxation Area'
   },
@@ -191,7 +191,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'playroom-1',
     src: '/images/Playroom%20%3A%20sofabed/Playroom%201.jpg',
-    alt: 'Spacious playroom with sofa bed',
+    alt: 'Playroom with a television, a teddy bear, shelves of board games and a doll’s house',
     category: 'Playroom',
     title: 'Family Playroom'
   },
@@ -200,7 +200,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'pool-1',
     src: '/images/Swimming%20pool/Swimming%20pool%201.jpg',
-    alt: 'Beautiful private swimming pool',
+    alt: 'The heated pool with its roller cover, the paved terrace and the back of the house',
     category: 'Swimming pool',
     featured: true,
     title: 'Private Pool'
@@ -208,14 +208,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'pool-6',
     src: '/images/Swimming%20pool/Swimming%20pool%206.jpg',
-    alt: 'Evening pool area with ambient lighting',
+    alt: 'The pool, an outdoor sofa and the lawn, with the poolside villa at the far end',
     category: 'Swimming pool',
     title: 'Evening Pool View'
   },
   {
     id: 'outdoor-shower',
     src: '/images/Swimming%20pool/Outside%20shower.jpg',
-    alt: 'Refreshing outdoor shower area',
+    alt: 'Outdoor shower with black marble-effect tiles and a rainfall head, behind wooden slats',
     category: 'Swimming pool',
     title: 'Outdoor Shower'
   },
@@ -224,14 +224,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'firepit-1',
     src: '/images/Firepit/Fire%20pit%201.jpg',
-    alt: 'Cozy fire pit area for evening gatherings',
+    alt: 'Firepit terrace with two fire tables and built-in benches with patterned cushions, backed by a hedge',
     category: 'Firepit',
     title: 'Fire Pit Area'
   },
   {
     id: 'firepit-4',
     src: '/images/Firepit/Fire%20pit%204.jpg',
-    alt: 'Outdoor fire pit gathering area',
+    alt: 'A fire table burning on the terrace, with the barbecue and the back of the house behind',
     category: 'Firepit',
     title: 'Outdoor Fire Area'
   },
@@ -240,35 +240,35 @@ export const havenImages: ImageData[] = [
   {
     id: 'poolside-lounge-2',
     src: '/images/Poolside%20villa/Poolside%20villa%20lounge%202.jpg',
-    alt: 'Comfortable poolside lounge',
+    alt: 'Poolside villa lounge with a cream sofa, a wall-mounted television and glass doors to the garden',
     category: 'Poolside villa',
     title: 'Villa Lounge'
   },
   {
     id: 'poolside-dining-1',
     src: '/images/Poolside%20villa/Poolside%20villa%20dining%20area%201.jpg',
-    alt: 'Poolside dining area with stunning views',
+    alt: 'Round dining table in the poolside villa, with the sofa and glass doors behind',
     category: 'Poolside villa',
     title: 'Poolside Dining'
   },
   {
     id: 'poolside-outside-dining',
     src: '/images/Poolside%20villa/Poolside%20villa%20outside%20dining%20area.jpg',
-    alt: 'Al fresco dining area',
+    alt: 'View from the poolside villa’s covered terrace across the pool to the back of the house',
     category: 'Poolside villa',
     title: 'Al Fresco Dining'
   },
   {
     id: 'poolside-kitchen',
     src: '/images/Poolside%20villa/Poolside%20villa%20kitchen.jpg',
-    alt: 'Poolside villa kitchen facilities',
+    alt: 'Poolside villa kitchen with white units, an oven and a hob',
     category: 'Poolside villa',
     title: 'Poolside Kitchen'
   },
   {
     id: 'poolside-shower-1',
     src: '/images/Poolside%20villa/Poolside%20villa%20shower%201.jpg',
-    alt: 'Poolside villa shower',
+    alt: 'Poolside villa shower room with a black-framed glass screen and a round mirror',
     category: 'Poolside villa',
     title: 'Villa Shower'
   }

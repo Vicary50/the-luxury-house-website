@@ -3,7 +3,7 @@ export default function IntroSection() {
     <section className="bg-paper py-24 sm:py-32">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-12">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-olive lg:col-span-3 lg:pt-4">East Yorkshire</p>
-        <div className="lg:col-span-8">
+        <div data-reveal className="lg:col-span-8">
           <h2 className="font-display text-[clamp(2.25rem,4.5vw,4rem)] font-light leading-[1.05] text-ink">
             One house, the whole party,
             <em className="block font-light">and room to spread out.</em>

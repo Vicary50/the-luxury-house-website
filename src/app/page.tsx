@@ -2,11 +2,16 @@ import HeroSection from '@/components/layout/HeroSection';
 import IntroSection from '@/components/layout/IntroSection';
 import Gallery from '@/components/gallery/Gallery';
 import Spread from '@/components/layout/Spread';
-import TestimonialsSlider from '@/components/testimonials/TestimonialsSlider';
 import FeaturesSection from '@/components/layout/FeaturesSection';
 import AccommodationSection from '@/components/layout/AccommodationSection';
 import ReserveStaySection from '@/components/layout/ReserveStaySection';
 import FAQSection from '@/components/layout/FAQSection';
+import OccasionsSection from '@/components/layout/OccasionsSection';
+import GuestBookSection from '@/components/layout/GuestBookSection';
+import LocationSection from '@/components/layout/LocationSection';
+import ClosingCta from '@/components/layout/ClosingCta';
+import CheckDatesBar from '@/components/layout/CheckDatesBar';
+import ScrollReveal from '@/components/layout/ScrollReveal';
 
 export default function Home() {
   return (
@@ -18,7 +23,7 @@ export default function Home() {
         <Spread
           id="about"
           image="/images/Swimming%20pool/Swimming%20pool%201.jpg"
-          alt="The heated pool beside the house, with sun loungers on the terrace and the lawn beyond"
+          alt="The heated pool with its roller cover, the paved terrace and the back of the house"
           eyebrow="The pool and villa"
           title="Warm water,"
           titleItalic="whatever the weather."
@@ -64,11 +69,16 @@ export default function Home() {
           tone="paper"
         />
         <FeaturesSection />
-        <TestimonialsSlider />
+        <OccasionsSection />
+        <GuestBookSection />
         <AccommodationSection />
         <ReserveStaySection />
         <FAQSection />
+        <LocationSection />
+        <ClosingCta />
       </main>
+      <CheckDatesBar />
+      <ScrollReveal />
     </div>
   );
 }
