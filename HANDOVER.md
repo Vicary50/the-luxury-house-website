@@ -110,8 +110,8 @@ npm run build
 
 ## Next actions
 
-1. **Delete the AUDIT TEST emails** — 3 in `theluxuryhouseuk@gmail.com` (owner's real inbox),
-   4 in `vakarri@gmail.com`.
+1. **Delete the AUDIT TEST emails** — 3 in `theluxuryhouseuk@gmail.com` (owner's real inbox).
+   The 4 in `vakarri@gmail.com` were already gone (checked 2026-10-16, incl. Trash).
 2. **Decide on the dead code** — `src/lib/stripe/stripe.ts` and the Google Sheets path. Both are
    unreachable in production. Delete them, or say the features are wanted. Product call.
 3. **Clear the 6 pre-existing type errors** — needs its own pass; `ignoreBuildErrors` is hiding them.
