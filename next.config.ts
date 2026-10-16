@@ -15,6 +15,8 @@ const contentSecurityPolicy = [
   // data:/blob: cover the jsPDF signature canvas on /terms.
   "img-src 'self' data: blob: https://placehold.co https://images.unsplash.com",
   "font-src 'self' data:",
+  // Self-hosted hero film in public/video.
+  "media-src 'self'",
   `connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com${isDev ? ' ws: http://localhost:*' : ''}`,
   "frame-src 'self'",
   "frame-ancestors 'none'",

@@ -1,8 +1,10 @@
 import Image from 'next/image';
 
-// Video slot: set when the hero film arrives (muted loop, portrait source cropped to landscape).
-// The photo stays as the poster and as the reduced-motion fallback.
-const HERO_VIDEO: { mp4: string; webm: string } | null = null;
+// Hero film: scripts/media.mjs writes `${HERO_VIDEO}-{landscape,portrait}.{webm,mp4,jpg}`.
+// Landscape screens get the 16:9 cut, portrait screens the full-height film; the .jpg is
+// each cut's first frame, shown until playback starts. null = photo-only hero.
+// The photo is the reduced-motion fallback.
+const HERO_VIDEO: string | null = '/video/kitchen-film';
 const HERO_PHOTO = '/images/Swimming%20pool/Swimming%20pool%206.jpg';
 
 const FACTS = [
@@ -19,24 +21,24 @@ export default function HeroSection() {
       <section id="home" className="relative isolate flex min-h-[640px] h-[calc(100svh-4rem)] items-end overflow-hidden bg-ink">
         <div className="hero-settle absolute inset-0 -z-10">
           {HERO_VIDEO ? (
-            <video
-              className="h-full w-full object-cover motion-reduce:hidden"
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster={HERO_PHOTO}
-              aria-hidden="true"
-            >
-              <source src={HERO_VIDEO.webm} type="video/webm" />
-              <source src={HERO_VIDEO.mp4} type="video/mp4" />
-            </video>
+            <div className="absolute inset-0 motion-reduce:hidden">
+              <picture>
+                <source media="(orientation: landscape)" srcSet={`${HERO_VIDEO}-landscape.jpg`} />
+                <img src={`${HERO_VIDEO}-portrait.jpg`} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
+              </picture>
+              <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline aria-hidden="true">
+                <source media="(orientation: landscape)" src={`${HERO_VIDEO}-landscape.webm`} type="video/webm" />
+                <source media="(orientation: landscape)" src={`${HERO_VIDEO}-landscape.mp4`} type="video/mp4" />
+                <source src={`${HERO_VIDEO}-portrait.webm`} type="video/webm" />
+                <source src={`${HERO_VIDEO}-portrait.mp4`} type="video/mp4" />
+              </video>
+            </div>
           ) : null}
           <Image
             src={HERO_PHOTO}
             alt="The heated outdoor pool at The Luxury House, with the poolside villa and lounge terrace beyond"
             fill
-            priority
+            priority={!HERO_VIDEO}
             sizes="100vw"
             className={`object-cover ${HERO_VIDEO ? 'hidden motion-reduce:block' : ''}`}
           />
