@@ -110,15 +110,12 @@ npm run build
 
 ## Next actions
 
-1. **Delete the old Netlify site after ~2026-09-19** — project `the-luxury-house-website`,
-   id `e2d6817d-2713-4fa3-985b-f2649d5004ba`. It is the rollback path until then.
-   *Rollback = point DNS back: apex A → `75.2.60.5`, `www` CNAME → `the-luxury-house-website.netlify.app`.*
-2. **Delete the AUDIT TEST emails** — 3 in `theluxuryhouseuk@gmail.com` (owner's real inbox),
+1. **Delete the AUDIT TEST emails** — 3 in `theluxuryhouseuk@gmail.com` (owner's real inbox),
    4 in `vakarri@gmail.com`.
-3. **Decide on the dead code** — `src/lib/stripe/stripe.ts` and the Google Sheets path. Both are
+2. **Decide on the dead code** — `src/lib/stripe/stripe.ts` and the Google Sheets path. Both are
    unreachable in production. Delete them, or say the features are wanted. Product call.
-4. **Clear the 6 pre-existing type errors** — needs its own pass; `ignoreBuildErrors` is hiding them.
-5. *(Optional)* Move rate limiting to Vercel KV if abuse becomes real.
+3. **Clear the 6 pre-existing type errors** — needs its own pass; `ignoreBuildErrors` is hiding them.
+4. *(Optional)* Move rate limiting to Vercel KV if abuse becomes real.
 
 ### Docs
 

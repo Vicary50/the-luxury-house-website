@@ -189,15 +189,7 @@ a `node_modules` symlink into a git worktree. Copy the directory or run `npm ci`
 
 **Fastest:** Vercel dashboard → Deployments → pick the previous good build → Promote to Production.
 
-**Back to Netlify** (available until the old site is deleted, planned after ~2026-09-19) — change
-DNS at Namecheap:
-
-```
-A      @     75.2.60.5
-CNAME  www   the-luxury-house-website.netlify.app
-```
-
-Netlify site `the-luxury-house-website`, project id `e2d6817d-2713-4fa3-985b-f2649d5004ba`.
+The old Netlify site was deleted on 2026-10-16, so there is no Netlify fallback any more.
 
 ---
 
