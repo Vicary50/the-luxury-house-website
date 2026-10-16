@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export default function ActivitiesClient() {
   const [activeRestaurantCategory, setActiveRestaurantCategory] = useState('all');
@@ -167,7 +165,6 @@ export default function ActivitiesClient() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       
       <main className="flex-grow">
         {/* Hero Section */}
@@ -399,7 +396,6 @@ export default function ActivitiesClient() {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 }

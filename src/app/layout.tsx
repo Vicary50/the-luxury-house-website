@@ -3,6 +3,8 @@ import { Inter, Playfair_Display, Merriweather, Cormorant_Garamond } from "next/
 import StructuredData from "@/components/SEO/StructuredData";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -94,8 +96,10 @@ export default function RootLayout({
         {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
+        <Header />
         <Breadcrumbs />
         {children}
+        <Footer />
       </body>
     </html>
   );

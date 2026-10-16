@@ -1,6 +1,4 @@
 import { Metadata } from 'next';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'Guest Resources - The Luxury House',
@@ -10,7 +8,6 @@ export const metadata: Metadata = {
 export default function InfoPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header />
       <main className="flex-grow flex items-center justify-center py-20">
         <div className="text-center max-w-2xl mx-auto px-4">
           <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-6">
@@ -22,7 +19,6 @@ export default function InfoPage() {
           </p>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { PrinterIcon } from '@heroicons/react/24/outline';
-import Footer from '@/components/layout/Footer';
 
 export default function CookiePolicyContent() {
   const handlePrint = () => {
@@ -222,7 +221,6 @@ export default function CookiePolicyContent() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

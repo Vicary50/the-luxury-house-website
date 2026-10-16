@@ -1,6 +1,4 @@
 import { notFound } from 'next/navigation';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import CategoryNavigation from '@/components/blog/CategoryNavigation';
 import CategoryHero from '@/components/blog/CategoryHero';
 import CategoryPosts from '@/components/blog/CategoryPosts';
@@ -53,7 +51,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <CategoryNavigation />
       
       <main>
@@ -74,7 +71,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 }

@@ -81,25 +81,25 @@ export default function Breadcrumbs() {
   }
 
   return (
-    <nav className="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="border-b border-hairline bg-stone print:hidden" aria-label="Breadcrumb">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex items-center space-x-2 py-3 text-sm">
           {breadcrumbs.map((item, index) => (
             <div key={item.href} className="flex items-center">
               {index === 0 ? (
-                <HomeIcon className="h-4 w-4 text-gray-400 mr-2" />
+                <HomeIcon className="h-4 w-4 text-muted mr-2" />
               ) : (
-                <ChevronRightIcon className="h-4 w-4 text-gray-400 mx-2" />
+                <ChevronRightIcon className="h-4 w-4 text-muted mx-2" />
               )}
               
               {index === breadcrumbs.length - 1 ? (
-                <span className="text-gray-900 font-medium" aria-current="page">
+                <span className="font-medium text-ink" aria-current="page">
                   {item.name}
                 </span>
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-600 hover:text-amber-600 transition-colors duration-200"
+                  className="text-muted transition-colors duration-300 hover:text-olive"
                 >
                   {item.name}
                 </Link>

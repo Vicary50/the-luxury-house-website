@@ -3,7 +3,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PrinterIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import Footer from '@/components/layout/Footer';
 import SignaturePad from '@/components/ui/SignaturePad';
 import { jsPDF } from 'jspdf';
 
@@ -776,7 +775,6 @@ export default function TermsContent() {
           </footer>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

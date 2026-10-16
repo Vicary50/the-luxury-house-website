@@ -1,7 +1,6 @@
 'use client';
 
 import { PrinterIcon } from '@heroicons/react/24/outline';
-import Footer from '@/components/layout/Footer';
 
 export default function PrivacyPolicyContent() {
   const handlePrint = () => {
@@ -259,7 +258,6 @@ export default function PrivacyPolicyContent() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

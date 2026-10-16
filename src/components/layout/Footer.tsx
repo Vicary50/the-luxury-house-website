@@ -1,124 +1,70 @@
-'use client';
-
-import { Mail, MapPin, Instagram, Facebook } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { Instagram, Facebook } from 'lucide-react';
 import Link from 'next/link';
 
+const linkClass = 'text-white/70 transition-colors duration-300 hover:text-white';
+
+const EXPLORE = [
+  { name: 'Gallery', href: '/#gallery' },
+  { name: 'Activities', href: '/activities' },
+  { name: 'Guest resources', href: '/info' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Enquire', href: '/#contact-form' },
+];
+
+// Opened in a new tab so a half-filled enquiry form is not lost.
+const LEGAL = [
+  { name: 'Privacy policy', href: '/privacy-policy' },
+  { name: 'Cookie policy', href: '/cookie-policy' },
+  { name: 'Terms & conditions', href: '/terms' },
+];
+
 export default function Footer() {
-  const pathname = usePathname();
-
-  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // If we're on the homepage, smooth scroll to contact form
-    if (pathname === '/') {
-      e.preventDefault();
-      const contactForm = document.getElementById('contact-form');
-      if (contactForm) {
-        contactForm.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    // Otherwise, let the link navigate normally to /#contact-form
-  };
-
   return (
-    <footer className="bg-gray-900 text-white py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
-            <h2 className="text-3xl merriweather-light text-white mb-4">THE LUXURY HOUSE</h2>
-            <p className="text-gray-300 mb-6 max-w-md">
-              Experience luxury and tranquility in our carefully curated holiday home. 
-              Where every detail matters and every moment is designed for your comfort.
-            </p>
-            <div className="flex space-x-4">
-              <a
-                href="https://www.instagram.com/theluxuryhouseuk/#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-amber-400 transition-colors"
-                aria-label="Follow us on Instagram"
-              >
-                <Instagram size={24} />
+    <footer className="bg-ink text-white print:hidden">
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-20">
+        <div className="grid gap-12 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <p className="font-display text-4xl font-light tracking-[-0.01em]">The Luxury House</p>
+            <p className="mt-2 font-display text-xl font-light italic text-white/70">East Yorkshire</p>
+            <div className="mt-8 flex gap-5">
+              <a href="https://www.instagram.com/theluxuryhouseuk/" target="_blank" rel="noopener noreferrer" aria-label="The Luxury House on Instagram" className={linkClass}>
+                <Instagram size={22} strokeWidth={1.5} />
               </a>
-              <a
-                href="https://www.facebook.com/p/The-Luxury-House-61558062093628/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-amber-400 transition-colors"
-                aria-label="Follow us on Facebook"
-              >
-                <Facebook size={24} />
+              <a href="https://www.facebook.com/p/The-Luxury-House-61558062093628/" target="_blank" rel="noopener noreferrer" aria-label="The Luxury House on Facebook" className={linkClass}>
+                <Facebook size={22} strokeWidth={1.5} />
               </a>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><Link href="/" className="text-gray-300 hover:text-amber-400 transition-colors">Home</Link></li>
-              <li><a href="#about" className="text-gray-300 hover:text-amber-400 transition-colors">Info</a></li>
-              <li><a href="#gallery" className="text-gray-300 hover:text-amber-400 transition-colors">Gallery</a></li>
-              <li><a href="/#contact-form" onClick={handleContactClick} className="text-gray-300 hover:text-amber-400 transition-colors">Contact</a></li>
+          <nav aria-label="Footer" className="md:col-span-3">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-white/50">Explore</h2>
+            <ul className="mt-5 space-y-3 text-sm">
+              {EXPLORE.map((item) => (
+                <li key={item.name}><Link href={item.href} className={linkClass}>{item.name}</Link></li>
+              ))}
             </ul>
-          </div>
+          </nav>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail size={18} className="text-amber-400" />
-                <a 
-                  href="mailto:theluxuryhouseuk@gmail.com" 
-                  className="text-gray-300 hover:text-amber-400 transition-colors duration-200 underline"
-                >
-                  theluxuryhouseuk@gmail.com
-                </a>
-              </div>
-              <div className="flex items-start space-x-3">
-                <MapPin size={18} className="text-amber-400 mt-1" />
-                <span className="text-gray-300">
-                  Beautiful East Yorkshire<br />
-                  United Kingdom
-                </span>
-              </div>
-            </div>
+          <div className="md:col-span-3">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-white/50">Contact</h2>
+            <p className="mt-5 text-sm">
+              <a href="mailto:theluxuryhouseuk@gmail.com" className={`${linkClass} underline decoration-white/30 underline-offset-4`}>
+                theluxuryhouseuk@gmail.com
+              </a>
+            </p>
+            <p className="mt-3 text-sm text-white/70">East Yorkshire, United Kingdom</p>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 The Luxury House. All rights reserved.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-end mt-4 md:mt-0">
-              <a 
-                href="/privacy-policy" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-amber-400 text-sm transition-colors"
-              >
-                Privacy Policy
-              </a>
-              <a 
-                href="/cookie-policy" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-amber-400 text-sm transition-colors"
-              >
-                Cookie Policy
-              </a>
-              <a 
-                href="/terms" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-amber-400 text-sm transition-colors"
-              >
-                Terms & Conditions
-              </a>
-            </div>
-          </div>
+        <div className="mt-16 flex flex-col gap-4 border-t border-white/15 pt-8 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
+          <p>© {new Date().getFullYear()} The Luxury House</p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {LEGAL.map((item) => (
+              <li key={item.name}>
+                <a href={item.href} target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-white">{item.name}</a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

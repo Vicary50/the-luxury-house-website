@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import CategoryNavigation from '@/components/blog/CategoryNavigation';
 import BlogHero from '@/components/blog/BlogHero';
 import TrendingSidebar from '@/components/blog/TrendingSidebar';
@@ -14,7 +12,6 @@ export const metadata = {
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <CategoryNavigation />
       
       <main>
@@ -47,7 +44,6 @@ export default function BlogPage() {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 }

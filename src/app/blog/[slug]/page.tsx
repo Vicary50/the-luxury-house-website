@@ -1,6 +1,4 @@
 import { notFound } from 'next/navigation';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import BlogPost from '@/components/blog/BlogPost';
 import { getBlogPostBySlug, blogPosts } from '@/lib/blog/blogData';
 
@@ -47,11 +45,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main>
         <BlogPost post={post} />
       </main>
-      <Footer />
     </div>
   );
 }
