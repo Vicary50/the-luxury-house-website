@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/lib/blog/blogData';
+import { blogPosts, blogCategories } from '@/lib/blog/blogData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://theluxuryhouse.uk';
@@ -64,20 +64,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.isPillar ? 0.8 : 0.6,
   }));
 
-  // Blog categories
-  const blogCategories = [
-    'hen-party-planning',
-    'family-celebrations', 
-    'romantic-getaways',
-    'local-area-guide',
-    'property-experience',
-    'guest-stories'
-  ].map(category => ({
-    url: `${baseUrl}/blog/category/${category}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.5,
-  }));
+  // Blog categories with at least one post; empty ones stay reachable but unlisted.
+  const blogCategoryPages = blogCategories
+    .filter((category) => blogPosts.some((post) => post.category === category.name))
+    .map((category) => ({
+      url: `${baseUrl}/blog/category/${category.id}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    }));
 
-  return [...staticPages, ...blogPages, ...blogCategories];
+  return [...staticPages, ...blogPages, ...blogCategoryPages];
 }
