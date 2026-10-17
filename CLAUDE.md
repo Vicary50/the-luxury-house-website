@@ -68,10 +68,14 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 4. **Payment** - Stripe-powered deposit processing
 
 ### Design System
-- **Colors**: Amber (#D97706) primary, warm grays, semantic colors
-- **Typography**: System fonts, light headings (300 weight), readable body text
-- **Animations**: Framer Motion for smooth interactions
-- **Responsive**: Mobile-first approach with Tailwind breakpoints
+Redesign live since 2026-10-17. Tokens live in `src/app/globals.css` `@theme`.
+- **Colours**: ink #1c1c1a, stone #efebe4, muted #5e5b54, hairline #d9d3c7, ONE accent olive #4b5234 (`text-olive`, `bg-olive`). No orange, pink or amber.
+- **Typography**: Cormorant Garamond light display (`font-display`) with an italic second line, Inter body. Tracked uppercase eyebrow labels.
+- **Long text**: `.prose-editorial` (blog bodies, legal pages); `.callout` for boxed notes.
+- **Shared pieces**: `layout/PageHeader` (inner-page opening band), `layout/Spread` (photo/text spread), `layout/OccasionPage` (occasion landing pages), `layout/ClosingCta`.
+- **Motion**: CSS hero load + GSAP ScrollTrigger via `layout/ScrollReveal` (`data-reveal`, `data-reveal-image`; opacity only, off under reduced motion). framer-motion is uninstalled.
+- **Buttons**: square (2px radius), olive fill or ink underline link. No pills, no shadows.
+- **Responsive**: mobile-first; check 390px and 1440px.
 
 ## Common Development Tasks
 
@@ -94,7 +98,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 - Use Tailwind utility classes consistently
 - Follow mobile-first responsive design
 - Maintain consistent spacing with Tailwind's scale (4, 6, 8, 12, etc.)
-- Use semantic color classes (amber-600, green-600, red-600)
+- Use the design tokens above (ink, stone, muted, hairline, olive); never raw Tailwind palette colours
 
 ## Google Sheets Integration
 

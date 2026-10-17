@@ -1,6 +1,6 @@
 # The Luxury House — Handover
 
-**Last verified:** 2026-09-12 · **HEAD:** `e224de7` · working tree clean, pushed to `origin/main`
+**Last verified:** 2026-10-17 · **HEAD:** `c6cb852` on `main` (= branch `redesign`), pushed, live
 
 > The folder is called "The Haven". The site, brand and repo are **The Luxury House**.
 
@@ -30,10 +30,47 @@ Do not "fix" this by inventing values — find out whether the features are want
 
 ---
 
+## Redesign (live 2026-10-17)
+
+Plan and full progress log: `~/.claude/plans/i-want-to-change-snug-volcano.md`. Built step by step
+on branch `redesign`, each step shown on localhost before commit, then fast-forwarded into `main`.
+
+- **Look:** editorial, muted UK palette, one olive accent, Cormorant Garamond + Inter. Tokens and
+  `.prose-editorial` in `src/app/globals.css`. See the Design System section of `CLAUDE.md`.
+- **Pages:** home rebuilt (film hero, gallery + lightbox, spreads, amenities, occasion cards, guest
+  book, prices, enquiry form, FAQ, location, closing CTA); blog, activities, info, terms, privacy and
+  cookies restyled; four occasion landing pages added: `/hen-party-house`, `/birthday-party-house`,
+  `/beverley-races-accommodation`, `/couples-retreat` (shared `layout/OccasionPage.tsx`).
+- **SEO (step 5b):** homepage title "Party House with Heated Pool, East Yorkshire | The Luxury
+  House"; keywords chosen from UK Google autocomplete (no hot tub, so pool searches are the target;
+  people search "party house", not "celebration house"). Sitemap lists the occasion pages and only
+  blog categories that have posts. Sitemap resubmitted and the 4 pages submitted for indexing in
+  Google Search Console by Vasu on 2026-10-17.
+- **Verified live 2026-10-17:** 21/21 sitemap URLs 200, no console errors at 390 and 1440, Lighthouse
+  mobile accessibility 100 on all tested pages, homepage performance 86. Both forms submitted on the
+  preview as AUDIT TEST: owner and guest emails all delivered (Vasu confirmed the owner inbox).
+
+### House facts (from Vasu, use these everywhere)
+
+- Sleeps **13 adults + 2 children under 12** (in the bunk beds) = 15. 5 bedrooms, 5 bathrooms.
+- Beds: **1** king-size, 3 double, 1 single, 2 bunk beds, 2 double sofa beds (one in the playroom).
+- Poolside villa can be booked on its own: sleeps 2 adults + 2 infants in cots.
+- About 25 minutes by car to Beverley and its racecourse. Brough station 6.9 miles, Hull 8.3 miles.
+- **Never publish the address or map coordinates** (burglary risk). Guests get it before arrival.
+- Hen weekends and birthdays are welcome when agreed at booking; only named guests may stay or visit.
+
+---
+
 ## Recent history
 
 | Commit | Date | What |
 |---|---|---|
+| `c6cb852` | 2026-10-17 | Sitemap lists only blog categories with posts (now `main`, live) |
+| `f099398` | 2026-10-17 | Hero film after load, reveal opacity (a11y), framer-motion removed |
+| `4deae91` | 2026-10-17 | Step 5b: homepage keywords + 4 occasion pages |
+| `325ce23` | 2026-10-17 | Step 5: inner pages restyled, old fonts/colours removed |
+| `f7d2ada` | 2026-10-16 | Step 4b: home sections, guest book, motion |
+| `704c4d3` / `2af95fa` / `7bd47dd` | 2026-10-16 | Steps 4a / 3 / 2: gallery, shared shell, media pipeline |
 | `e224de7` | 2026-09-12 | Audit issues 3/4/6/7 — escaping, sitemap, security headers, signer PDF copy |
 | `29e5d80` | 2026-09-12 | Audit issues 1/2/5 — rate limits, PDF validation, www→apex 308 |
 | `c471571` | 2026-09-12 | Maildiver → Resend, `/api/sign-terms` added |
@@ -75,8 +112,8 @@ signature pad, jsPDF and submit under the live CSP with zero violations.
   (dynamicPricing ×3, googleSheets, stripe, the stale `eslint` key). Not regressions — if you see 7,
   you added one.
 - **CSP keeps `'unsafe-inline'` for script *and* style, and it is load-bearing.** Next's inline
-  hydration/flight bootstrap, the JSON-LD in `StructuredData`, styled-jsx in `TermsContent`,
-  `next/font` and framer-motion all inject inline script or style. Removing it needs per-request
+  hydration/flight bootstrap, the JSON-LD in `StructuredData` and `next/font` inject inline
+  script or style. Removing it needs per-request
   nonces from middleware, which costs the static prerendering the marketing pages currently get.
   `'unsafe-eval'` and `ws:` are dev-only via a `NODE_ENV` check.
 - **Rate limits are in-memory and per serverless instance**, resetting on cold start
@@ -95,6 +132,19 @@ signature pad, jsPDF and submit under the live CSP with zero violations.
 - A `node_modules` **symlink** into a git worktree crashes Turbopack
   ("Symlink node_modules is invalid, it points out of the filesystem root"). Copy or `npm ci`.
 - `src/lib/stripe/stripe.ts` **is imported by nothing.** Stripe is dead code.
+- **Previews are behind Vercel login.** Use the Vercel MCP `get_access_to_vercel_url` share link
+  (23 h) and carry its cookie into Playwright/Lighthouse. Preview Lighthouse shows SEO 0 and a
+  CSP error for `vercel.live` feedback.js: both are preview-only, ignore them.
+- **Disk space:** a production build next to the dev server filled the Mac (2 GB free) and the dev
+  server silently stopped picking up new routes (404s). Check `df -h /` before building; restart the
+  dev server after a disk-full event.
+- **zsh:** never name a shell loop variable `path`; it overwrites `$PATH`.
+- **ScrollReveal must animate `opacity`, not GSAP `autoAlpha`:** `visibility:hidden` removes
+  unrevealed headings from screen readers.
+- **Hero film** mounts after window load (`layout/HeroVideo.tsx`) so it does not slow the first
+  paint on phones. Replace files via `node scripts/media.mjs videos`.
+- Gmail connector found the AUDIT TEST guest copies within a minute this time; Resend is still the
+  source of truth for delivery.
 
 ---
 
@@ -110,12 +160,18 @@ npm run build
 
 ## Next actions
 
-1. **Delete the AUDIT TEST emails** — 3 in `theluxuryhouseuk@gmail.com` (owner's real inbox).
-   The 4 in `vakarri@gmail.com` were already gone (checked 2026-10-16, incl. Trash).
-2. **Decide on the dead code** — `src/lib/stripe/stripe.ts` and the Google Sheets path. Both are
-   unreachable in production. Delete them, or say the features are wanted. Product call.
-3. **Clear the 6 pre-existing type errors** — needs its own pass; `ignoreBuildErrors` is hiding them.
-4. *(Optional)* Move rate limiting to Vercel KV if abuse becomes real.
+1. **Prices section text** (`src/components/layout/AccommodationSection.tsx`, Vasu's wording):
+   house line still says "14 adults, 2 under-12s & 2 infants", villa says "3 adults". Correct to
+   13 adults + 2 children under 12, and villa 2 adults + 2 infants in cots. Vasu revises prices too.
+2. **Delete AUDIT TEST emails:** 2 from 2026-10-17 (plus 3 older ones if still there) in `theluxuryhouseuk@gmail.com`, and 2
+   from 2026-10-17 in `vakarri@gmail.com`.
+3. **Blog optimisation** (Vasu, later): posts use stock Unsplash photos (one shows London for an
+   East Yorkshire guide) and American spellings; two categories have no posts.
+4. **Next project:** direct booking + dynamic pricing (candidates listed in the plan).
+5. **Watch Google Search Console** for the 4 occasion pages being indexed.
+6. **Decide on the dead code**: `src/lib/stripe/stripe.ts` and the Google Sheets path.
+7. **Clear the 6 pre-existing type errors** (`ignoreBuildErrors` hides them).
+8. *(Optional)* Move rate limiting to Vercel KV if abuse becomes real.
 
 ### Docs
 

@@ -88,8 +88,8 @@ Set in the `headers()` block of `next.config.ts`:
 header.
 
 The CSP keeps `'unsafe-inline'` for **both script and style**, and this is load-bearing. Next's
-inline hydration/flight bootstrap, the JSON-LD block in `StructuredData`, styled-jsx in
-`TermsContent`, `next/font` and framer-motion all inject inline script or style. Removing it
+inline hydration/flight bootstrap, the JSON-LD block in `StructuredData` and `next/font`
+inject inline script or style. Removing it
 requires per-request nonces from middleware, which costs the static prerendering the marketing
 pages currently get. `'unsafe-eval'` and `ws:` are added for **dev only** via a `NODE_ENV` check.
 
