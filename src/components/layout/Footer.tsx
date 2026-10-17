@@ -8,6 +8,10 @@ const EXPLORE = [
   { name: 'Activities', href: '/activities' },
   { name: 'Guest resources', href: '/info' },
   { name: 'Blog', href: '/blog' },
+  { name: 'Hen weekends', href: '/hen-party-house' },
+  { name: 'Birthdays', href: '/birthday-party-house' },
+  { name: 'Beverley races', href: '/beverley-races-accommodation' },
+  { name: 'Couples', href: '/couples-retreat' },
   { name: 'Enquire', href: '/#contact-form' },
 ];
 

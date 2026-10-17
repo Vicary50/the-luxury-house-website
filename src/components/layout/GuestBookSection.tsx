@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 // Transcribed from the handwritten guest review book in the house (scans in public/images/testimonials).
 // Wording as written; only capitals and sentence breaks at the writer's line breaks were added.
-const ENTRIES = [
+export const ENTRIES = [
   {
     quote: 'What a great find! Such a hidden gem, lovely and spacious, just what we needed as a family. The boys enjoyed splashing around and using the pool villa which gave me and husband some time to relax and talk. Highly recommended.',
     name: null,

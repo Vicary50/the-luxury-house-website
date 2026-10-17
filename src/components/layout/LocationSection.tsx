@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 const STATIONS = [
+  ['Beverley', '25 min drive'],
   ['Brough station', '6.9 miles'],
   ['Hull station', '8.3 miles'],
 ];
@@ -13,7 +14,7 @@ export default function LocationSection() {
           <p data-reveal className="text-xs font-medium uppercase tracking-[0.2em] text-olive">Location</p>
           <h2 data-reveal className="mt-5 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink">
             East Yorkshire,
-            <em className="block font-light">with Hull close by.</em>
+            <em className="block font-light">within reach of Beverley and Hull.</em>
           </h2>
           <p className="mt-8 max-w-xl text-[1.0625rem] leading-[1.75] text-muted">
             Our activities guide covers places to eat, Hull’s old town and The Deep, and days out in the

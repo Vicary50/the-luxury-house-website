@@ -61,7 +61,7 @@ export const havenImages: ImageData[] = [
   {
     id: 'kingsize-1',
     src: '/images/Kingsize%20bedroom/Kingsize%20bedroom%201.jpg',
-    alt: 'King-size bedroom with a white wooden bed, grey walls and a window onto trees',
+    alt: 'Front bedroom with a white wooden bed, grey walls and a window onto trees',
     category: 'Kingsize bedroom',
     title: 'Kingsize Bedroom'
   },
@@ -70,14 +70,14 @@ export const havenImages: ImageData[] = [
   {
     id: 'rear-king-1',
     src: '/images/Rear%20Kingsize%20bedroom/Rear%20Kingsize%20bedroom%201.jpg',
-    alt: 'Rear king-size bedroom with tree-pattern wallpaper and a window onto the garden',
+    alt: 'Rear bedroom with tree-pattern wallpaper and a window onto the garden',
     category: 'Rear Kingsize bedroom',
     title: 'Garden View Bedroom'
   },
   {
     id: 'rear-king-2',
     src: '/images/Rear%20Kingsize%20bedroom/Rear%20Kingsize%20bedroom%202.jpg',
-    alt: 'Rear king-size bedroom with a white wardrobe, folded towels on the chest of drawers and a dressing gown on the door',
+    alt: 'Rear bedroom with a white wardrobe, folded towels on the chest of drawers and a dressing gown on the door',
     category: 'Rear Kingsize bedroom',
     title: 'Rear King Bedroom'
   },

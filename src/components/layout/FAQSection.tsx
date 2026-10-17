@@ -41,7 +41,7 @@ const FAQS: FAQ[] = [
   {
     id: 12,
     question: "What are the sleeping arrangements?",
-    answer: "There is 1 king-size bed, 3 double beds, 1 single bed, 2 bunk beds and 2 double sofa beds. The house sleeps 14 adults and 2 children under 12."
+    answer: "There is 1 king-size bed, 3 double beds, 1 single bed, 2 bunk beds and 2 double sofa beds. The house sleeps 13 adults, plus 2 children under 12 in the bunk beds."
   },
   {
     id: 7,
@@ -59,10 +59,20 @@ const FAQS: FAQ[] = [
   {
     id: 8,
     question: "Are there any house rules we need to be aware of?",
-    answer: "Key house rules include: maximum occupancy of 14 adults and 2 children under 12, no smoking indoors, no pets, quiet hours between 10:00 PM and 8:00 AM, and supervision required for children around the pool. Please treat the property with respect."
+    answer: "Key house rules include: maximum occupancy of 13 adults and 2 children under 12, no smoking indoors, no pets, quiet hours between 10:00 PM and 8:00 AM, and supervision required for children around the pool. Please treat the property with respect."
   },
   {
     id: 9,
+    question: "How far is the house from Beverley Racecourse?",
+    answer: "About 25 minutes by car. We do not publish the address; you receive it with directions before you arrive."
+  },
+  {
+    id: 13,
+    question: "Can we book the poolside villa on its own?",
+    answer: "Yes. The poolside villa sleeps 2 and can be booked on its own, with the heated pool. Choose “Pool Villa & Heated Swimming Pool” in the enquiry form."
+  },
+  {
+    id: 14,
     question: "What is the nearest train station?",
     answer: "Brough station (6.9 miles) and Hull station (8.3 miles)."
   },

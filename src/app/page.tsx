@@ -24,7 +24,7 @@ export default function Home() {
           id="about"
           image="/images/Swimming%20pool/Swimming%20pool%201.jpg"
           alt="The heated pool with its roller cover, the paved terrace and the back of the house"
-          eyebrow="The pool and villa"
+          eyebrow="Heated pool & poolside villa"
           title="Warm water,"
           titleItalic="whatever the weather."
           paragraphs={[
@@ -36,7 +36,7 @@ export default function Home() {
         <Spread
           image="/images/Dining%20area/Dining%20area%201.jpg"
           alt="The dining room, with a long dark table, cream chairs and white orchids, and garden views through the window"
-          eyebrow="Kitchen, dining and living"
+          eyebrow="Kitchen, dining & two living rooms"
           title="Cook together,"
           titleItalic="then sit down at one table."
           paragraphs={[
@@ -49,7 +49,7 @@ export default function Home() {
         <Spread
           image="/images/Firepit/Fire%20pit%204.jpg"
           alt="A fire table burning on the terrace at the back of the house"
-          eyebrow="Evenings"
+          eyebrow="Firepit terrace"
           title="When the sun goes,"
           titleItalic="the fire comes on."
           paragraphs={[
@@ -59,11 +59,11 @@ export default function Home() {
         <Spread
           image="/images/Master%20bedroom/Master%20bedroom%202.jpg"
           alt="The master bedroom, with a large upholstered bed and soft grey linen"
-          eyebrow="Bedrooms"
-          title="Room for fourteen,"
+          eyebrow="Sleeps 15 · 5 bedrooms"
+          title="Room for fifteen,"
           titleItalic="and somewhere quiet for each."
           paragraphs={[
-            'A master suite with its own en suite, king-size rooms at the front and back of the house, a double, a bunk room, and a children’s room with its own en suite. The playroom has a sofa bed for the overflow.',
+            'Five bedrooms, each with its own bathroom, including a master suite, a bunk room and a children’s room. Between them there is 1 king-size bed, 3 doubles, 1 single and 2 bunk beds, plus 2 double sofa beds, one of them in the playroom.',
           ]}
           flip
           tone="paper"

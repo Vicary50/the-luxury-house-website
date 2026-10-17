@@ -34,7 +34,7 @@ export default function CheckDatesBar() {
     >
       <div className="flex items-center justify-between gap-6 px-5 py-3">
         <p className="font-display text-lg text-ink">
-          Sleeps up to 14<span className="hidden sm:inline"> <span className="text-muted">·</span> <em>East Yorkshire</em></span>
+          Sleeps up to 15<span className="hidden sm:inline"> <span className="text-muted">·</span> <em>East Yorkshire</em></span>
         </p>
         <a
           href="#contact-form"

@@ -9,7 +9,7 @@ export default function IntroSection() {
             <em className="block font-light">and room to spread out.</em>
           </h2>
           <p className="mt-8 max-w-2xl text-[1.0625rem] leading-[1.75] text-muted">
-            The Luxury House is a large private home let as a whole, for groups of up to fourteen.
+            The Luxury House is a large private home let as a whole, for groups of up to fifteen.
             Outside there is a heated pool, a poolside villa and a firepit terrace. Inside, a kitchen
             big enough for several cooks, a separate dining room, and two living rooms with
             wood-burning stoves.

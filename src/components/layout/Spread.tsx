@@ -35,7 +35,7 @@ export default function Spread({ id, image, alt, eyebrow, title, titleItalic, pa
             </div>
             {cta && (
               <a
-                href="#contact-form"
+                href="/#contact-form"
                 className="mt-10 inline-flex min-h-12 items-center border-b border-ink pb-1 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:border-olive hover:text-olive"
               >
                 Enquire about dates

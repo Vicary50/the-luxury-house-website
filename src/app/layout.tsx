@@ -22,9 +22,9 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "The Luxury House | Premium Holiday Rental",
-  description: "Experience comfort and luxury in every corner of our carefully curated spaces. The Luxury House offers premium holiday accommodation with private pool, elegant interiors, and world-class amenities.",
-  keywords: ["luxury holiday rental", "vacation home", "private pool", "premium accommodation", "holiday let"],
+  title: "Party House with Heated Pool, East Yorkshire | The Luxury House",
+  description: "Five-bedroom luxury house 25 minutes from Beverley, with a heated pool, sauna and firepit terrace. Sleeps 15. Hen weekends, birthdays, race days and family stays.",
+  keywords: ["party house East Yorkshire", "hen party house East Yorkshire", "large house to rent with pool Yorkshire", "accommodation near Beverley Racecourse", "holiday house sleeps 15"],
   authors: [{ name: "The Luxury House" }],
   creator: "The Luxury House",
   publisher: "The Luxury House",
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "The Luxury House - Premium Holiday Rental",
-    description: "Experience comfort and luxury in every corner of our carefully curated spaces",
+    title: "Party House with Heated Pool, East Yorkshire | The Luxury House",
+    description: "Five-bedroom luxury house 25 minutes from Beverley, with a heated pool, sauna and firepit terrace. Sleeps 15. Hen weekends, birthdays, race days and family stays.",
     url: 'https://theluxuryhouse.uk',
     siteName: 'The Luxury House',
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         url: '/images/Hero/Hero%20photo.jpg',
         width: 1200,
         height: 630,
-        alt: 'The Luxury House Premium Holiday Rental',
+        alt: 'The heated pool at The Luxury House, East Yorkshire',
       },
     ],
     locale: 'en_GB',
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Luxury House - Premium Holiday Rental",
-    description: "Experience comfort and luxury in every corner of our carefully curated spaces",
+    title: "Party House with Heated Pool, East Yorkshire | The Luxury House",
+    description: "Five-bedroom luxury house 25 minutes from Beverley, with a heated pool, sauna and firepit terrace. Sleeps 15. Hen weekends, birthdays, race days and family stays.",
     images: ['/images/Hero/Hero%20photo.jpg'],
   },
   robots: {

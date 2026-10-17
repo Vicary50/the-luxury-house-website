@@ -91,7 +91,7 @@ export default function TermsContent() {
       addText('Check-in is from 3:00 PM; Check-out is by 11:00 AM. Detailed instructions provided 48 hours before arrival.', 11, false, 12);
 
       addText('6. OCCUPANCY AND PROPERTY USE', 14, true, 8);
-      addText('Maximum occupancy is 16 people (14 adults and 2 children under 12). Unauthorized additional guests may result in immediate termination of booking. Quiet hours are 10:00 PM to 8:00 AM. Smoking and pets are strictly prohibited.', 11, false, 12);
+      addText('Maximum occupancy is 15 people (13 adults and 2 children under 12). Unauthorized additional guests may result in immediate termination of booking. Quiet hours are 10:00 PM to 8:00 AM. Smoking and pets are strictly prohibited.', 11, false, 12);
 
       addText('7. PROPERTY FACILITIES AND SAFETY', 14, true, 8);
       addText('Use of pool, sauna, and fire pit is at guests\' own risk. No lifeguard on duty. Children must be supervised at all times. No glass in pool area.', 11, false, 12);
@@ -294,7 +294,7 @@ export default function TermsContent() {
 
           <h3>6.1 Guest Numbers</h3>
           <p>
-            The maximum occupancy for this property is 16 people (14 adults and 2 children under 12). To ensure a smooth stay, all guests must be listed on the booking form with their full names and ages. If you want to add more guests, you must get prior written approval, and a surcharge may apply. Please note that unauthorized additional guests may result in the immediate termination of your booking and require you to vacate the property.
+            The maximum occupancy for this property is 15 people (13 adults and 2 children under 12). To ensure a smooth stay, all guests must be listed on the booking form with their full names and ages. If you want to add more guests, you must get prior written approval, and a surcharge may apply. Please note that unauthorized additional guests may result in the immediate termination of your booking and require you to vacate the property.
           </p>
 
           <h3>6.2 Age Restrictions</h3>

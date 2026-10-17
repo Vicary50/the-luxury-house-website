@@ -3,9 +3,8 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "The Luxury House",
-    "description": "Experience luxury and tranquility at The Luxury House, our premium holiday rental home featuring private pool, elegant interiors, and world-class amenities.",
+    "description": "Five-bedroom luxury house in East Yorkshire, 25 minutes from Beverley, with a heated outdoor pool, sauna, firepit terrace and poolside villa. Sleeps 13 adults and 2 children under 12.",
     "url": "https://theluxuryhouse.uk",
-    "logo": "https://theluxuryhouse.uk/images/logo.png",
     "image": [
       "https://theluxuryhouse.uk/images/Hero/Hero%20photo.jpg",
       "https://theluxuryhouse.uk/images/Master%20bedroom/Master%20bedroom%201.jpg",
@@ -17,21 +16,21 @@ export default function StructuredData() {
       "addressLocality": "East Yorkshire",
       "addressRegion": "Yorkshire and the Humber"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "53.7676",
-      "longitude": "-0.3274"
-    },
     "email": "theluxuryhouseuk@gmail.com",
     "priceRange": "£££",
     "amenityFeature": [
       {
         "@type": "LocationFeatureSpecification",
-        "name": "Private Swimming Pool",
+        "name": "Heated outdoor swimming pool",
         "value": true
       },
       {
-        "@type": "LocationFeatureSpecification", 
+        "@type": "LocationFeatureSpecification",
+        "name": "Sauna",
+        "value": true
+      },
+      {
+        "@type": "LocationFeatureSpecification",
         "name": "WiFi",
         "value": true
       },
@@ -51,26 +50,6 @@ export default function StructuredData() {
         "value": true
       }
     ],
-    "offers": {
-      "@type": "Offer",
-      "category": "Accommodation",
-      "priceSpecification": {
-        "@type": "PriceSpecification",
-        "minPrice": 800,
-        "maxPrice": 1500,
-        "priceCurrency": "GBP",
-        "eligibleQuantity": {
-          "@type": "QuantitativeValue",
-          "minValue": 1,
-          "maxValue": 10,
-          "unitText": "guests"
-        }
-      },
-      "availability": "http://schema.org/InStock",
-      "validFrom": "2024-01-01",
-      "validThrough": "2025-12-31"
-    },
-    "hasMap": "https://maps.google.com/",
     "checkinTime": "15:00",
     "checkoutTime": "11:00",
     "numberOfRooms": "5",
