@@ -20,7 +20,6 @@ export interface BlogCategory {
   id: string;
   name: string;
   description: string;
-  color: string;
   subCategories?: string[];
 }
 
@@ -29,42 +28,36 @@ export const blogCategories: BlogCategory[] = [
     id: 'hen-party-planning',
     name: 'Hen Party Planning',
     description: 'Complete guides for planning the perfect hen party at The Luxury House',
-    color: '#f7a49e',
     subCategories: ['Planning & Logistics', 'Activities & Entertainment', 'Practical Tips', 'Creative Ideas', 'Accommodation']
   },
   {
     id: 'family-celebrations',
     name: 'Family Celebrations',
     description: 'Everything you need for memorable family milestone events',
-    color: '#948d71',
     subCategories: ['Milestone Events', 'Planning & Logistics', 'Activities & Experiences', 'Practical Considerations']
   },
   {
     id: 'romantic-getaways',
     name: 'Romantic Getaways',
     description: 'Ideas and inspiration for couples seeking romance and connection',
-    color: '#f7c6c2',
     subCategories: ['Special Occasions', 'Activities & Experiences', 'Planning & Ideas', 'Budget & Lifestyle']
   },
   {
     id: 'local-area-guide',
     name: 'Local Area Guide',
     description: 'Discover the best East Yorkshire has to offer for your celebration',
-    color: '#d9d7c2',
     subCategories: ['Attractions & Activities', 'Dining & Entertainment', 'Practical Information', 'Hidden Gems & Secrets']
   },
   {
     id: 'property-experience',
     name: 'Property Experience',
     description: 'Make the most of The Luxury House\'s luxury amenities and features',
-    color: '#fceeed',
     subCategories: ['Amenities & Features', 'Guest Guidelines', 'Practical Information']
   },
   {
     id: 'guest-stories',
     name: 'Guest Stories',
     description: 'Real stories and experiences from our guests',
-    color: '#f7a49e',
     subCategories: ['Success Stories', 'Transformations & Tips']
   }
 ];
@@ -459,18 +452,4 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
 
 export function getBlogPostsByCategory(category: string): BlogPost[] {
   return blogPosts.filter(post => post.category === category);
-}
-
-export function getFeaturedPosts(): BlogPost[] {
-  return blogPosts.filter(post => post.featured);
-}
-
-export function getPillarPages(): BlogPost[] {
-  return blogPosts.filter(post => post.isPillar);
-}
-
-export function getRecentPosts(limit: number = 6): BlogPost[] {
-  return blogPosts
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, limit);
 }

@@ -1,158 +1,70 @@
-'use client';
-
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
-import OptimizedImage from '@/components/ui/OptimizedImage';
+import ClosingCta from '@/components/layout/ClosingCta';
+import { blogCategories, type BlogPost as Post } from '@/lib/blog/blogData';
 
-interface BlogPostProps {
-  post: {
-    title: string;
-    excerpt: string;
-    content: string;
-    author: string;
-    authorRole: string;
-    date: string;
-    readTime: string;
-    category: string;
-    image: string;
-    tags: string[];
-  };
-}
+export default function BlogPost({ post }: { post: Post }) {
+  const category = blogCategories.find((c) => c.name === post.category);
 
-export default function BlogPost({ post }: BlogPostProps) {
   return (
-    <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <motion.nav
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="mb-8"
-      >
-        <div className="flex items-center space-x-2 text-sm text-gray-500">
-          <Link href="/" className="hover:text-[#948d71] transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <Link href="/blog" className="hover:text-[#948d71] transition-colors">
-            Blog
-          </Link>
-          <span>/</span>
-          <span className="text-gray-900">{post.category}</span>
-        </div>
-      </motion.nav>
-
-      {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-8"
-      >
-        <div className="mb-4">
-          <span className="inline-block px-3 py-1 bg-[#fceeed] text-[#948d71] text-sm font-semibold rounded-full">
-            {post.category}
-          </span>
-        </div>
-        
-        <h1 className="text-4xl lg:text-5xl font-serif text-gray-900 mb-6 leading-tight">
-          {post.title}
-        </h1>
-        
-        <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-          {post.excerpt}
-        </p>
-        
-        <div className="flex items-center justify-between pb-8 border-b border-gray-200">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#948d71] to-[#7a7460] rounded-full flex items-center justify-center mr-4">
-              <span className="text-white font-bold">
-                {post.author.split(' ').map(n => n[0]).join('')}
-              </span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">{post.author}</p>
-              <p className="text-sm text-gray-500">{post.authorRole}</p>
-            </div>
+    <>
+      <article>
+        <header className="bg-stone pb-16 pt-20 sm:pb-20 sm:pt-28">
+          <div className="mx-auto max-w-3xl px-5 sm:px-8">
+            {category ? (
+              <Link
+                href={`/blog/category/${category.id}`}
+                className="rise-in text-xs font-medium uppercase tracking-[0.2em] text-olive hover:text-olive-deep"
+              >
+                {post.category}
+              </Link>
+            ) : (
+              <p className="rise-in text-xs font-medium uppercase tracking-[0.2em] text-olive">{post.category}</p>
+            )}
+            <h1 className="rise-in mt-5 font-display text-[clamp(2.5rem,5vw,4.25rem)] font-light leading-[1.04] text-ink">
+              {post.title}
+            </h1>
+            <p className="mt-8 text-[1.1875rem] leading-[1.7] text-muted">{post.excerpt}</p>
+            <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-hairline pt-6 text-sm">
+              <div>
+                <dt className="sr-only">Author</dt>
+                <dd className="text-ink">{post.author}</dd>
+                <dd className="text-muted">{post.authorRole}</dd>
+              </div>
+              <div>
+                <dt className="sr-only">Published</dt>
+                <dd className="text-ink">{post.date}</dd>
+                <dd className="text-muted">{post.readTime} read</dd>
+              </div>
+            </dl>
           </div>
-          
-          <div className="text-right text-sm text-gray-500">
-            <p>{post.date}</p>
-            <p>{post.readTime} read</p>
-          </div>
-        </div>
-      </motion.header>
+        </header>
 
-      {/* Featured Image */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden mb-12"
-      >
-        <OptimizedImage
-          src={post.image}
-          alt={post.title}
-          width={1200}
-          height={600}
-          className="object-cover w-full h-full"
+        <div className="relative mx-auto aspect-[2/1] max-w-6xl overflow-hidden bg-stone sm:mt-0">
+          <Image src={post.image} alt="" fill priority sizes="(min-width: 1152px) 1152px, 100vw" className="object-cover" />
+        </div>
+
+        <div
+          className="prose-editorial mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-24"
+          dangerouslySetInnerHTML={{ __html: post.content }}
         />
-      </motion.div>
 
-      {/* Content */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="prose prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: post.content }}
-        style={{
-          '--tw-prose-headings': '#111827',
-          '--tw-prose-body': '#374151',
-          '--tw-prose-links': '#d97706',
-          '--tw-prose-bold': '#111827',
-          '--tw-prose-counters': '#6b7280',
-          '--tw-prose-bullets': '#d1d5db',
-        } as React.CSSProperties}
-      />
-
-      {/* Tags */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="mt-12 pt-8 border-t border-gray-200"
-      >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
-        <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-pointer"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Back to Blog */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="mt-12 text-center"
-      >
-        <Link
-          href="/blog"
-          className="inline-flex items-center px-6 py-3 bg-[#948d71] text-white font-semibold rounded-lg hover:bg-[#7a7460] transition-all duration-200 transform hover:scale-105"
-        >
-          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0L2.586 11H9a1 1 0 110 2H2.586l3.707 3.707a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L2.586 9H9a1 1 0 110 2H2.586l3.707 3.707z" clipRule="evenodd" />
-          </svg>
-          Back to Blog
-        </Link>
-      </motion.div>
-    </article>
+        <footer className="mx-auto max-w-2xl px-5 pb-24 sm:px-8">
+          <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-olive">Tags</h2>
+          <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
+            {post.tags.map((tag) => (
+              <li key={tag}>#{tag}</li>
+            ))}
+          </ul>
+          <Link
+            href="/blog"
+            className="mt-14 inline-flex min-h-12 items-center border-b border-ink pb-1 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:border-olive hover:text-olive"
+          >
+            <span aria-hidden="true" className="mr-2">←</span>Back to blog
+          </Link>
+        </footer>
+      </article>
+      <ClosingCta />
+    </>
   );
 }

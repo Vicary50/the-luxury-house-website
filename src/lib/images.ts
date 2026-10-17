@@ -318,5 +318,5 @@ export const getAllCategories = (): ImageCategory[] => {
 
 // Placeholder image generator for fallback
 export const getPlaceholderImage = (width: number, height: number, text: string): string => {
-  return `https://placehold.co/${width}x${height}/e6d5b8/8b4513?text=${encodeURIComponent(text)}`;
+  return `https://placehold.co/${width}x${height}/efebe4/5e5b54?text=${encodeURIComponent(text)}`;
 };

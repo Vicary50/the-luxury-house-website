@@ -44,10 +44,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <main>
-        <BlogPost post={post} />
-      </main>
-    </div>
+    <main>
+      <BlogPost post={post} />
+    </main>
   );
 }

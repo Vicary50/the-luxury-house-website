@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
+import PageHeader from '@/components/layout/PageHeader';
 
 export const metadata: Metadata = {
   title: 'Guest Resources - The Luxury House',
@@ -7,18 +9,19 @@ export const metadata: Metadata = {
 
 export default function InfoPage() {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <main className="flex-grow flex items-center justify-center py-20">
-        <div className="text-center max-w-2xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-6">
-            Coming Soon
-          </h1>
-          <div className="w-16 h-1 bg-amber-600 mx-auto mb-8"></div>
-          <p className="text-xl text-gray-600">
-            We&apos;re working on creating comprehensive guest resources for your stay at The Luxury House.
-          </p>
-        </div>
-      </main>
-    </div>
+    <main>
+      <PageHeader
+        eyebrow="Guest resources"
+        title="Coming soon."
+        intro={<p>We&apos;re working on creating comprehensive guest resources for your stay at The Luxury House.</p>}
+      >
+        <Link
+          href="/#faq"
+          className="inline-flex min-h-12 items-center border-b border-ink pb-1 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:border-olive hover:text-olive"
+        >
+          Questions and house rules
+        </Link>
+      </PageHeader>
+    </main>
   );
 }

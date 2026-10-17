@@ -125,7 +125,7 @@ export default function SignaturePad({ onSave, onClear }: SignaturePadProps) {
 
     return (
         <div className="w-full">
-            <div className="relative border-b-2 border-gray-300 bg-gray-50 rounded-t-lg overflow-hidden group">
+            <div className="relative overflow-hidden border-b border-ink/40 bg-paper">
                 <canvas
                     ref={canvasRef}
                     onMouseDown={startDrawing}
@@ -141,18 +141,15 @@ export default function SignaturePad({ onSave, onClear }: SignaturePadProps) {
                 <button
                     type="button"
                     onClick={clear}
-                    className="absolute top-2 right-2 text-xs text-gray-400 hover:text-red-500 transition-colors bg-white/80 px-2 py-1 rounded border border-gray-200"
+                    className="absolute right-2 top-2 min-h-8 border border-hairline bg-paper px-3 text-xs font-medium text-muted transition-colors duration-300 hover:border-ink hover:text-ink"
                 >
                     Clear
                 </button>
                 {isEmpty && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400 italic">
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-xl italic text-muted">
                         Sign here...
                     </div>
                 )}
-            </div>
-            <div className="text-center text-[10px] text-gray-400 mt-1 uppercase tracking-widest">
-                Digital Signature Pad
             </div>
         </div>
     );

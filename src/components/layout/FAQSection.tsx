@@ -39,6 +39,11 @@ const FAQS: FAQ[] = [
     answer: "There is seating for 8 guests."
   },
   {
+    id: 12,
+    question: "What are the sleeping arrangements?",
+    answer: "There is 1 king-size bed, 3 double beds, 1 single bed, 2 bunk beds and 2 double sofa beds. The house sleeps 14 adults and 2 children under 12."
+  },
+  {
     id: 7,
     question: "Can you recommend any local places to eat out?",
     answer: (
@@ -54,7 +59,7 @@ const FAQS: FAQ[] = [
   {
     id: 8,
     question: "Are there any house rules we need to be aware of?",
-    answer: "Key house rules include: maximum occupancy of 14 adults, no smoking indoors, no pets, quiet hours between 10:00 PM and 8:00 AM, and supervision required for children around the pool. Please treat the property with respect."
+    answer: "Key house rules include: maximum occupancy of 14 adults and 2 children under 12, no smoking indoors, no pets, quiet hours between 10:00 PM and 8:00 AM, and supervision required for children around the pool. Please treat the property with respect."
   },
   {
     id: 9,

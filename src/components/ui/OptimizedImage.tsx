@@ -57,7 +57,7 @@ export default function OptimizedImage({
       <Image {...imageProps} alt={alt} />
       {isLoading && !fill && width && height && (
         <div
-          className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-100 animate-pulse"
+          className="absolute inset-0 bg-stone"
           style={{ width, height }}
         />
       )}

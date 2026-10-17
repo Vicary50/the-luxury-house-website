@@ -1,8 +1,8 @@
-import CategoryNavigation from '@/components/blog/CategoryNavigation';
-import BlogHero from '@/components/blog/BlogHero';
-import TrendingSidebar from '@/components/blog/TrendingSidebar';
-import PopularPosts from '@/components/blog/PopularPosts';
-import AllArticles from '@/components/blog/AllArticles';
+import PageHeader from '@/components/layout/PageHeader';
+import ScrollReveal from '@/components/layout/ScrollReveal';
+import CategoryLinks from '@/components/blog/CategoryLinks';
+import PostCard from '@/components/blog/PostCard';
+import { blogPosts } from '@/lib/blog/blogData';
 
 export const metadata = {
   title: 'Blog | The Luxury House - Luxury Holiday Insights & Travel Tips',
@@ -10,40 +10,34 @@ export const metadata = {
 };
 
 export default function BlogPage() {
+  const posts = [...blogPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const lead = posts.find((post) => post.featured) ?? posts[0];
+  const rest = posts.filter((post) => post !== lead);
+
   return (
-    <div className="min-h-screen bg-white">
-      <CategoryNavigation />
-      
-      <main>
-        {/* Hero Section with Featured Article and Trending Sidebar */}
-        <section className="py-8 md:py-12 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
-              <div className="xl:col-span-2">
-                <BlogHero />
-              </div>
-              <div className="xl:col-span-1">
-                <TrendingSidebar />
-              </div>
-            </div>
-          </div>
-        </section>
+    <main>
+      <PageHeader
+        eyebrow="Blog"
+        title="Plans, ideas"
+        titleItalic="and the area around the house."
+        intro={<p>Discover luxury travel insights, holiday tips, and local experiences at The Luxury House.</p>}
+      />
+      <CategoryLinks />
 
-        {/* Most Popular Posts */}
-        <section className="py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <PopularPosts />
-          </div>
-        </section>
+      <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
+        <div data-reveal>
+          <PostCard post={lead} lead />
+        </div>
 
-        {/* All Articles */}
-        <section className="py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AllArticles />
-          </div>
-        </section>
-      </main>
-
-    </div>
+        <ul className="mt-24 grid gap-x-8 gap-y-16 border-t border-hairline pt-16 sm:grid-cols-2 lg:grid-cols-3">
+          {rest.map((post) => (
+            <li key={post.id} data-reveal>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <ScrollReveal />
+    </main>
   );
 }

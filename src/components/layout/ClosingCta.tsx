@@ -19,7 +19,7 @@ export default function ClosingCta() {
           <em className="block font-light">and stay a while.</em>
         </h2>
         <a
-          href="#contact-form"
+          href="/#contact-form"
           className="mt-10 inline-flex min-h-12 items-center justify-center rounded-[2px] bg-white px-8 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:bg-stone"
         >
           Enquire about dates
