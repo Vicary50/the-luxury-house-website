@@ -176,26 +176,26 @@ export default function ReserveStaySection() {
             Choose your dates and group size to see an estimate, then send the enquiry. We will be in touch to confirm availability.
           </p>
 
-          <dl className="mt-10 space-y-6 border-t border-hairline pt-8">
-            <div className="flex gap-4">
+          <ul className="mt-10 space-y-6 border-t border-hairline pt-8">
+            <li className="flex gap-4">
               <Mail className="mt-0.5 h-5 w-5 shrink-0 text-olive" strokeWidth={1.25} aria-hidden="true" />
               <div>
-                <dt className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Email</dt>
-                <dd className="mt-1">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Email</p>
+                <p className="mt-1">
                   <a href="mailto:theluxuryhouseuk@gmail.com" className="break-all text-ink underline underline-offset-4 transition-colors duration-300 hover:text-olive">
                     theluxuryhouseuk@gmail.com
                   </a>
-                </dd>
+                </p>
               </div>
-            </div>
-            <div className="flex gap-4">
+            </li>
+            <li className="flex gap-4">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-olive" strokeWidth={1.25} aria-hidden="true" />
               <div>
-                <dt className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Location</dt>
-                <dd className="mt-1 text-ink">East Yorkshire, United Kingdom</dd>
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Location</p>
+                <p className="mt-1 text-ink">East Yorkshire, United Kingdom</p>
               </div>
-            </div>
-          </dl>
+            </li>
+          </ul>
         </div>
 
         <div className="border border-hairline bg-paper p-6 sm:p-10 lg:col-span-8">

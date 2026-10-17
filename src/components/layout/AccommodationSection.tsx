@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 import { CheckIcon } from '@heroicons/react/24/outline';
 
@@ -81,36 +80,27 @@ export default function AccommodationSection() {
     <section className="bg-paper py-24 sm:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <motion.h2
+          <h2
             className="mb-4 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[1.05] text-ink"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            data-reveal
           >
             Choose Your Accommodation
-          </motion.h2>
-          <motion.p
+          </h2>
+          <p
             className="mx-auto max-w-2xl text-[1.0625rem] leading-[1.75] text-muted"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
+            data-reveal
           >
             Select the accommodation that best suits your group size and requirements
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {accommodationOptions.map((option, index) => (
-            <motion.div
+          {accommodationOptions.map((option) => (
+            <div
               key={option.type}
               onClick={() => handleCardClick(option.type)}
               className="relative cursor-pointer overflow-hidden border border-hairline bg-paper transition-colors duration-300 hover:border-olive"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              data-reveal
             >
               {/* Image Gallery */}
               <div className="relative h-48 bg-stone">
@@ -161,7 +151,7 @@ export default function AccommodationSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

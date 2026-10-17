@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import HeroVideo from '@/components/layout/HeroVideo';
 
 // Hero film: scripts/media.mjs writes `${HERO_VIDEO}-{landscape,portrait}.{webm,mp4,jpg}`.
 // Landscape screens get the 16:9 cut, portrait screens the full-height film; the .jpg is
@@ -28,12 +29,7 @@ export default function HeroSection() {
                 <source media="(orientation: landscape)" srcSet={`${HERO_VIDEO}-landscape.jpg`} />
                 <img src={`${HERO_VIDEO}-portrait.jpg`} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
               </picture>
-              <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline aria-hidden="true">
-                <source media="(orientation: landscape)" src={`${HERO_VIDEO}-landscape.webm`} type="video/webm" />
-                <source media="(orientation: landscape)" src={`${HERO_VIDEO}-landscape.mp4`} type="video/mp4" />
-                <source src={`${HERO_VIDEO}-portrait.webm`} type="video/webm" />
-                <source src={`${HERO_VIDEO}-portrait.mp4`} type="video/mp4" />
-              </video>
+              <HeroVideo base={HERO_VIDEO} />
             </div>
           ) : null}
           <Image
